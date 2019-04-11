@@ -1,121 +1,107 @@
-from tkinter import *
-from tkinter import Menu
-from tkinter import ttk
+import tkinter as tk
 from tkinter import messagebox
 
-def try_login():
-    if name_entry.get()==default_name and password_entry.get() == default_password:
-       messagebox.showinfo("LOGIN SUCCESSFULLY","WELCOME")
-    else:
-       messagebox.showwarning("login failed","Please try again" )
+import config
 
 
-def cancel_login():
-    log.destroy()
+class AppFrame(tk.Tk):
+    def __init__(self):
+        tk.Tk.__init__(self)
+        self.frame = LoginFrame(self)
+        self.frame.pack()
+
+    def change(self, frame):
+        self.frame.pack_forget()
+        self.frame = frame(self)
+        self.frame.pack()
 
 
+class LoginFrame(tk.Frame):
+    def __init__(self, master=None, **kwargs):
+        tk.Frame.__init__(self, master, **kwargs)
 
-default_name=("admin")
-default_password=("test")
+        master.title(config.LOGIN_TITLE)
+        master.geometry("300x200")
 
-log=Tk()
-log.title("MagazynProLogin")
-log.geometry("600x400+400+200")
-log.resizable (width=FALSE,height=FALSE)
+        lbl = tk.Label(self, text='Enter login')
+        lbl.pack()
+        self.login = tk.Entry(self, show="*")
+        self.login.pack()
+        self.login.focus()
+        self.login.bind('<Return>', self.check)
 
+        lbl = tk.Label(self, text='Enter password')
+        lbl.pack()
+        self.pwd = tk.Entry(self, show="*")
+        self.pwd.pack()
+        self.pwd.bind('<Return>', self.check)
+        btn = tk.Button(self, text="Done", command=self.check)
+        btn.pack()
+        btn = tk.Button(self, text="Cancel", command=self.quit)
+        btn.pack()
 
-LABEL_1 = Label(log,text="USER NAME")
-LABEL_1.place(x=50,y=100)
-LABEL_2 = Label(log,text="PASSWORD")
-LABEL_2.place(x=50,y=150)
-
-BUTTON_1=ttk. Button(text="Login",command=open())
-BUTTON_1.place(x=50,y=200)
-BUTTON_1=ttk. Button(text="Cancel",command=quit)
-BUTTON_1.place(x=200,y=200)
-
-name_entry=Entry(log,width=30)
-name_entry.place(x=150,y=100)
-password_entry=ttk. Entry(log,width=30,show="*")
-password_entry.place(x=150,y=150)
-
-log. mainloop()
-
-def main():
-    root = Tk()
-    root.geometry("850x650+300+200")
-    app = Main(root)
-    root.mainloop()
-
-class Main (Frame):
-    def __init__(self, parent):
-        Frame.__init__(self, parent)
-        self.parent = parent
-        self.initUI()
-
-    def initUI(self):
-        self.parent.title("MagazynPro")
-
-        menubar = Menu(self.parent)
-        self.parent.config(menu=menubar)
-
-        fileMenu = Menu(menubar)
-        magMenu = Menu(menubar)
-        magmenu2 = Menu(magMenu, tearoff=0)
-        slowMenu = Menu(menubar)
-        helpMenu = Menu (menubar)
-
-        #submenu = Menu(fileMenu)
-
-        menubar.add_cascade(label="Dokumenty", underline=0, menu=fileMenu)
-
-        files_menu = ['Dokumenty przychodowe', 'Dokumenty rozchodowe', 'Dokumenty inwentaryzacyjne',
-                      'Zamkniecie miesiaca']
-        add_menu_elements(fileMenu, files_menu)
+    def check(self, event=None):
+        if self.pwd.get() == config.DEFAULT_PASSWORD and self.login.get() == config.DEFAULT_LOGIN:
+            messagebox.showinfo("Successfully login", "Welcome")
+            self.master.change(MainFrame)
+        else:
+            messagebox.showwarning("Login failed", "Please try again")
 
 
-        menubar.add_cascade(label="Magazyny", underline=0, menu=magMenu)
+class MainFrame(tk.Frame):
+    def __init__(self, master=None, **kwargs):
+        tk.Frame.__init__(self, master, **kwargs)
+        master.title(config.APP_TITLE)
+        master.geometry("850x650+300+200")
+        self.init_ui()
 
-        mags_menu = ['Kartoteki magazynowe', 'Bilans otwarcia', 'Inwentaryzacja', 'Dokumenty magazynowe']
+    def init_ui(self):
+        menu_bar = tk.Menu(self.master)
+        self.master.config(menu=menu_bar)
+
+        file_menu = tk.Menu(menu_bar)
+        magMenu = tk.Menu(menu_bar)
+        magmenu2 = tk.Menu(magMenu, tearoff=0)
+        slowMenu = tk.Menu(menu_bar)
+        helpMenu = tk.Menu(menu_bar)
+
+        menu_bar.add_cascade(label="Dokumenty", underline=0, menu=file_menu)
+        files_menu_list = ['Dokumenty przychodowe', 'Dokumenty rozchodowe', 'Dokumenty inwentaryzacyjne',
+                           'Zamkniecie miesiaca']
+        self.add_menu_elements(file_menu, files_menu_list)
+
+        menu_bar.add_cascade(label="Magazyny", underline=0, menu=magMenu)
+
+        mags_menu_list = ['Kartoteki magazynowe', 'Bilans otwarcia', 'Inwentaryzacja', 'Dokumenty magazynowe']
         mags_menu_opts = {'Dokumenty magazynowe': {'menu': magmenu2}}
-        add_menu_elements(magMenu, mags_menu, mags_menu_opts)
+        self.add_menu_elements(magMenu, mags_menu_list, mags_menu_opts)
 
         magmenu2.add_command(label='wg dokumentow')
         magmenu2.add_command(label='wg indeksow')
         magmenu2.add_command(label='wg grup materialowych i indeksow')
 
+        menu_bar.add_cascade(label="Slowniki", underline=0, menu=slowMenu)
+        slow_menu = ['Indeksy materialowe', 'Kartoteka kontrahentow', 'Jednostki firmy', 'Jednostki miary', 'Magazyny',
+                     'Dokumenty magazynowe']
+        self.add_menu_elements(slowMenu, slow_menu)
 
-
-        menubar.add_cascade(label="Slowniki", underline=0, menu=slowMenu)
-        slow_menu = ['Indeksy materialowe','Kartoteka kontrahentow', 'Jednostki firmy','Jednostki miary','Magazyny','Dokumenty magazynowe']
-        add_menu_elements(slowMenu, slow_menu)
-
-
-
-        menubar.add_cascade(label="Pomoc", underline=0, menu=helpMenu)
+        menu_bar.add_cascade(label="Pomoc", underline=0, menu=helpMenu)
         help_menu = ['O programie', 'Instrukcja obsugi']
-        add_menu_elements(helpMenu, help_menu)
+        self.add_menu_elements(helpMenu, help_menu)
 
+        file_menu.add_separator()
+        file_menu.add_command(label="Wyjscie", underline=0, command=self.on_exit)
 
-        fileMenu.add_separator()
-        fileMenu.add_command(label="Wyjscie", underline=0, command=self.onExit)
-
-    def onExit(self):
+    def on_exit(self):
         self.quit()
 
+    @classmethod
+    def add_menu_elements(cls, menu, elements, opts=None):
+        opts = opts or {}
+        for el in elements:
+            menu.add_cascade(label=el, **opts.get(el, {}))
 
 
-
-def add_menu_elements(menu, elements, opts=None):
-    opts = opts or {}
-    for el in elements:
-        menu.add_cascade(label=el, **opts.get(el, {}))
-
-
-
-
-
-
-
-if __name__ == '__main__':
-    main()
+if __name__ == "__main__":
+    app = AppFrame()
+    app.mainloop()
