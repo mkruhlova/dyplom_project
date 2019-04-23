@@ -1,7 +1,11 @@
 import tkinter as tk
 from tkinter import messagebox
 
-from doc.dok_prz import SecondFrame
+from Magazyny.wg_dok import SecondFrame
+from Pomoc.about_prog import AbProgFrame
+from Pomoc.instruction import InstructProg
+from Slowniki.indeks_material import IndexMat
+from Slowniki.kard_agent import KardAg
 
 import config
 
@@ -85,11 +89,16 @@ class MainFrame(tk.Frame):
         menu_bar.add_cascade(label="Slowniki", underline=0, menu=slowMenu)
         slow_menu = ['Indeksy materialowe', 'Kartoteka kontrahentow', 'Jednostki firmy', 'Jednostki miary', 'Magazyny',
                      'Dokumenty magazynowe']
-        self.add_menu_elements(slowMenu, slow_menu)
+        slow_menu_opts = {'Indeksy materialowe':{'command':self.ind_mat},'Kartoteka kontrahentow':{'command':self.kardfile}}
+        self.add_menu_elements(slowMenu, slow_menu,slow_menu_opts)
 
         menu_bar.add_cascade(label="Pomoc", underline=0, menu=helpMenu)
         help_menu = ['O programie', 'Instrukcja obsugi']
-        self.add_menu_elements(helpMenu, help_menu)
+        help_menu_opts = {'O programie':{'command': self.ab_program},'Instrukcja Obslugi':{'command': self.instr}}
+        #help_menu_re = {'Instrukcja Obslugi':{'command': self.instr}}
+        self.add_menu_elements(helpMenu, help_menu, help_menu_opts)
+
+
 
         file_menu.add_separator()
         file_menu.add_command(label="Wyjscie", underline=0, command=self.on_exit)
@@ -98,16 +107,25 @@ class MainFrame(tk.Frame):
         self.quit()
 
     def on_mag(self):
-    	self.master.change(SecondFrame)
+        self.master.change(SecondFrame)
+
+    def ab_program(self):
+        self.master.change(AbProgFrame)
+
+    def instr(self):
+        self.master.change(InstructProg)
+
+    def ind_mat(self):
+        self.master.change(IndexMat)
+
+    def kardfile(self):
+        self.master.change(KardAg)
 
     @classmethod
     def add_menu_elements(cls, menu, elements, opts=None):
         opts = opts or {}
         for el in elements:
             menu.add_cascade(label=el, **opts.get(el, {}))
-
-
-
 
 
 if __name__ == "__main__":
