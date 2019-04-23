@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter import messagebox
 
+from doc.dok_prz import SecondFrame
+
 import config
 
 
@@ -76,7 +78,7 @@ class MainFrame(tk.Frame):
         mags_menu_opts = {'Dokumenty magazynowe': {'menu': magmenu2}}
         self.add_menu_elements(magMenu, mags_menu_list, mags_menu_opts)
 
-        magmenu2.add_command(label='wg dokumentow')
+        magmenu2.add_command(label='wg dokumentow', command=self.on_mag)
         magmenu2.add_command(label='wg indeksow')
         magmenu2.add_command(label='wg grup materialowych i indeksow')
 
@@ -95,11 +97,17 @@ class MainFrame(tk.Frame):
     def on_exit(self):
         self.quit()
 
+    def on_mag(self):
+    	self.master.change(SecondFrame)
+
     @classmethod
     def add_menu_elements(cls, menu, elements, opts=None):
         opts = opts or {}
         for el in elements:
             menu.add_cascade(label=el, **opts.get(el, {}))
+
+
+
 
 
 if __name__ == "__main__":
