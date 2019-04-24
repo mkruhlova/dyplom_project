@@ -1,9 +1,10 @@
 import tkinter as tk
-from tkinter import messagebox
-class AbProgFrame(tk.Frame):
+
+
+class SecondFrame(tk.Frame):
     def __init__(self, master=None, **kwargs):
         tk.Frame.__init__(self, master, **kwargs)
-        master.title("O programie")
+        master.title("AAAAAAAAAAAAAAAAAAAAAA")
         master.geometry("850x650+300+200")
         self.init_ui()
 

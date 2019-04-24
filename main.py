@@ -1,57 +1,35 @@
 import tkinter as tk
-from tkinter import messagebox
-
-from Magazyny.wg_dok import SecondFrame
-from Pomoc.about_prog import AbProgFrame
-from Pomoc.instruction import InstructProg
-from Slowniki.indeks_material import IndexMat
-from Slowniki.kard_agent import KardAg
 
 import config
+from magazyny.wg_dok import SecondFrame
+from pomoc.about_prog import AbProgFrame
+from pomoc.instruction import InstructProg
+from slowniki.indeks_material import IndexMat
+from slowniki.kard_agent import KardAg
+from login import LoginFrame
+
+files_menu_list = ['Dokumenty przychodowe', 'Dokumenty rozchodowe', 'Dokumenty inwentaryzacyjne', 'Zamkniecie miesiaca']
+mags_menu_list = ['Kartoteki magazynowe', 'Bilans otwarcia', 'Inwentaryzacja', 'Dokumenty magazynowe']
+slow_menu = [
+    'Indeksy materialowe', 'Kartoteka kontrahentow', 'Jednostki firmy', 'Jednostki miary', 'Magazyny',
+    'Dokumenty magazynowe'
+]
+help_menu = ['O programie', 'Instrukcja obslugi']
 
 
 class AppFrame(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
-        self.frame = LoginFrame(self)
+        if config.DEV:
+            self.frame = MainFrame(self)
+        else:
+            self.frame = LoginFrame(self, MainFrame)
         self.frame.pack()
 
     def change(self, frame):
         self.frame.pack_forget()
         self.frame = frame(self)
         self.frame.pack()
-
-
-class LoginFrame(tk.Frame):
-    def __init__(self, master=None, **kwargs):
-        tk.Frame.__init__(self, master, **kwargs)
-
-        master.title(config.LOGIN_TITLE)
-        master.geometry("300x200")
-
-        lbl = tk.Label(self, text='Enter login')
-        lbl.pack()
-        self.login = tk.Entry(self, show="*")
-        self.login.pack()
-        self.login.focus()
-        self.login.bind('<Return>', self.check)
-
-        lbl = tk.Label(self, text='Enter password')
-        lbl.pack()
-        self.pwd = tk.Entry(self, show="*")
-        self.pwd.pack()
-        self.pwd.bind('<Return>', self.check)
-        btn = tk.Button(self, text="Done", command=self.check)
-        btn.pack()
-        btn = tk.Button(self, text="Cancel", command=self.quit)
-        btn.pack()
-
-    def check(self, event=None):
-        if self.pwd.get() == config.DEFAULT_PASSWORD and self.login.get() == config.DEFAULT_LOGIN:
-            messagebox.showinfo("Successfully login", "Welcome")
-            self.master.change(MainFrame)
-        else:
-            messagebox.showwarning("Login failed", "Please try again")
 
 
 class MainFrame(tk.Frame):
@@ -72,13 +50,10 @@ class MainFrame(tk.Frame):
         helpMenu = tk.Menu(menu_bar)
 
         menu_bar.add_cascade(label="Dokumenty", underline=0, menu=file_menu)
-        files_menu_list = ['Dokumenty przychodowe', 'Dokumenty rozchodowe', 'Dokumenty inwentaryzacyjne',
-                           'Zamkniecie miesiaca']
         self.add_menu_elements(file_menu, files_menu_list)
 
         menu_bar.add_cascade(label="Magazyny", underline=0, menu=magMenu)
 
-        mags_menu_list = ['Kartoteki magazynowe', 'Bilans otwarcia', 'Inwentaryzacja', 'Dokumenty magazynowe']
         mags_menu_opts = {'Dokumenty magazynowe': {'menu': magmenu2}}
         self.add_menu_elements(magMenu, mags_menu_list, mags_menu_opts)
 
@@ -87,18 +62,15 @@ class MainFrame(tk.Frame):
         magmenu2.add_command(label='wg grup materialowych i indeksow')
 
         menu_bar.add_cascade(label="Slowniki", underline=0, menu=slowMenu)
-        slow_menu = ['Indeksy materialowe', 'Kartoteka kontrahentow', 'Jednostki firmy', 'Jednostki miary', 'Magazyny',
-                     'Dokumenty magazynowe']
-        slow_menu_opts = {'Indeksy materialowe':{'command':self.ind_mat},'Kartoteka kontrahentow':{'command':self.kardfile}}
-        self.add_menu_elements(slowMenu, slow_menu,slow_menu_opts)
+
+        slow_menu_opts = {'Indeksy materialowe': {'command': self.ind_mat},
+                          'Kartoteka kontrahentow': {'command': self.kardfile}}
+        self.add_menu_elements(slowMenu, slow_menu, slow_menu_opts)
 
         menu_bar.add_cascade(label="Pomoc", underline=0, menu=helpMenu)
-        help_menu = ['O programie', 'Instrukcja obsugi']
-        help_menu_opts = {'O programie':{'command': self.ab_program},'Instrukcja Obslugi':{'command': self.instr}}
-        #help_menu_re = {'Instrukcja Obslugi':{'command': self.instr}}
+        help_menu_opts = {'O programie': {'command': self.ab_program}, 'Instrukcja obslugi': {'command': self.instr}}
+        help_menu_re = {'Instrukcja Obslugi': {'command': self.instr}}
         self.add_menu_elements(helpMenu, help_menu, help_menu_opts)
-
-
 
         file_menu.add_separator()
         file_menu.add_command(label="Wyjscie", underline=0, command=self.on_exit)

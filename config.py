@@ -1,3 +1,5 @@
+DEV = True
+
 DEFAULT_LOGIN = 'admin'
 DEFAULT_PASSWORD = ''
 
