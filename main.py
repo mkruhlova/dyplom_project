@@ -6,6 +6,11 @@ from Pomoc.about_prog import AbProgFrame
 from Pomoc.instruction import InstructProg
 from Slowniki.indeks_material import IndexMat
 from Slowniki.kard_agent import KardAg
+from Slowniki.company_devision import CompDev
+from Slowniki.unit_devision import UnitDev
+from Slowniki.storage import Storage
+from Slowniki.docsstore import DocsStore
+
 
 import config
 
@@ -89,13 +94,14 @@ class MainFrame(tk.Frame):
         menu_bar.add_cascade(label="Slowniki", underline=0, menu=slowMenu)
         slow_menu = ['Indeksy materialowe', 'Kartoteka kontrahentow', 'Jednostki firmy', 'Jednostki miary', 'Magazyny',
                      'Dokumenty magazynowe']
-        slow_menu_opts = {'Indeksy materialowe':{'command':self.ind_mat},'Kartoteka kontrahentow':{'command':self.kardfile}}
+        slow_menu_opts = {'Indeksy materialowe':{'command':self.ind_mat},'Kartoteka kontrahentow':{'command':self.kardfile},
+                          'Jednostki firmy':{'command':self.compdevision},'Jednostki miary':{'command':self.unitdevision},
+                          'Magazyny':{'command':self.storage},'Dokumenty magazynowe':{'command':self.storagedocs}}
         self.add_menu_elements(slowMenu, slow_menu,slow_menu_opts)
 
         menu_bar.add_cascade(label="Pomoc", underline=0, menu=helpMenu)
-        help_menu = ['O programie', 'Instrukcja obsugi']
-        help_menu_opts = {'O programie':{'command': self.ab_program},'Instrukcja Obslugi':{'command': self.instr}}
-        #help_menu_re = {'Instrukcja Obslugi':{'command': self.instr}}
+        help_menu = ['O programie', 'Instrukcja obslugi']
+        help_menu_opts = {'O programie':{'command': self.ab_program},'Instrukcja obslugi':{'command': self.instr}}
         self.add_menu_elements(helpMenu, help_menu, help_menu_opts)
 
 
@@ -120,6 +126,18 @@ class MainFrame(tk.Frame):
 
     def kardfile(self):
         self.master.change(KardAg)
+
+    def compdevision(self):
+        self.master.change(CompDev)
+
+    def unitdevision(self):
+        self.master.change(UnitDev)
+
+    def storage(self):
+        self.master.change(Storage)
+
+    def storagedocs(self):
+        self.master.change(DocsStore)
 
     @classmethod
     def add_menu_elements(cls, menu, elements, opts=None):

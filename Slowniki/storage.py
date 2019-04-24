@@ -1,9 +1,9 @@
 import tkinter as tk
 from tkinter import messagebox
-class KardAg(tk.Frame):
+class Storage(tk.Frame):
     def __init__(self, master=None, **kwargs):
         tk.Frame.__init__(self, master, **kwargs)
-        master.title("Kartoteka kontrahentow")
+        master.title("Magazyny")
         master.geometry("850x650+300+200")
         self.init_ui()
 
