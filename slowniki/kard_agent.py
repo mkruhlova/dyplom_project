@@ -1,5 +1,6 @@
 import tkinter as tk
-from tkinter import messagebox
+
+
 class KardAg(tk.Frame):
     def __init__(self, master=None, **kwargs):
         tk.Frame.__init__(self, master, **kwargs)
