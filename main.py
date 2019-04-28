@@ -10,6 +10,14 @@ from Slowniki.company_devision import CompDev
 from Slowniki.unit_devision import UnitDev
 from Slowniki.storage import Storage
 from Slowniki.docsstore import DocsStore
+from Magazyny.warehouse_records import Warehouse_Rec
+from Magazyny.opening_balance import Balance_open
+from Magazyny.inventory import Inventory_store
+from Dokumenty.income_documents import Income_docs
+from Dokumenty.expence_documents import Expence_docs
+from Dokumenty.inwentory_documents import Inventory_Docs
+from Dokumenty.period_close import Period_close
+
 
 
 import config
@@ -79,12 +87,15 @@ class MainFrame(tk.Frame):
         menu_bar.add_cascade(label="Dokumenty", underline=0, menu=file_menu)
         files_menu_list = ['Dokumenty przychodowe', 'Dokumenty rozchodowe', 'Dokumenty inwentaryzacyjne',
                            'Zamkniecie miesiaca']
-        self.add_menu_elements(file_menu, files_menu_list)
+        files_menu_opts = {'Dokumenty przychodowe':{'command':self.income_docs},'Dokumenty rozchodowe':{'command':self.expence_docs},
+                           'Dokumenty inwentaryzacyjne':{'command':self.inwent_docs},'Zamkniecie miesiaca':{'command':self.close_period}}
+        self.add_menu_elements(file_menu, files_menu_list, files_menu_opts)
 
         menu_bar.add_cascade(label="Magazyny", underline=0, menu=magMenu)
 
         mags_menu_list = ['Kartoteki magazynowe', 'Bilans otwarcia', 'Inwentaryzacja', 'Dokumenty magazynowe']
-        mags_menu_opts = {'Dokumenty magazynowe': {'menu': magmenu2}}
+        mags_menu_opts = {'Kartoteki magazynowe':{'command':self.warerec},'Bilans otwarcia':{'command':self.openbal},
+                          'Inwentaryzacja':{'command':self.inventory},'Dokumenty magazynowe': {'menu': magmenu2}}
         self.add_menu_elements(magMenu, mags_menu_list, mags_menu_opts)
 
         magmenu2.add_command(label='wg dokumentow', command=self.on_mag)
@@ -110,34 +121,56 @@ class MainFrame(tk.Frame):
         file_menu.add_command(label="Wyjscie", underline=0, command=self.on_exit)
 
     def on_exit(self):
-        self.quit()
+        self.quit() #выход из программы
 
     def on_mag(self):
-        self.master.change(SecondFrame)
+        self.master.change(SecondFrame) #выпадающее меню
 
     def ab_program(self):
-        self.master.change(AbProgFrame)
+        self.master.change(AbProgFrame) #помощь
 
     def instr(self):
-        self.master.change(InstructProg)
+        self.master.change(InstructProg) #помощь
 
     def ind_mat(self):
-        self.master.change(IndexMat)
+        self.master.change(IndexMat) #slowniki
 
     def kardfile(self):
-        self.master.change(KardAg)
+        self.master.change(KardAg) #slowniki
 
     def compdevision(self):
-        self.master.change(CompDev)
+        self.master.change(CompDev) #slowniki
 
     def unitdevision(self):
-        self.master.change(UnitDev)
+        self.master.change(UnitDev) #slowniki
 
     def storage(self):
-        self.master.change(Storage)
+        self.master.change(Storage) #slowniki
 
     def storagedocs(self):
-        self.master.change(DocsStore)
+        self.master.change(DocsStore) #slowniki
+
+    def warerec(self):
+        self.master.change(Warehouse_Rec) #magazyny
+
+    def openbal(self):
+        self.master.change(Balance_open) #magazyny
+
+    def inventory(self):
+        self.master.change(Inventory_store) #magazyny
+
+    def income_docs(self):
+        self.master.change(Income_docs)
+    def expence_docs(self):
+        self.master.change(Expence_docs)
+    def inwent_docs(self):
+        self.master.change(Inventory_Docs)
+    def close_period(self):
+        self.master.change(Period_close)
+
+
+
+
 
     @classmethod
     def add_menu_elements(cls, menu, elements, opts=None):
