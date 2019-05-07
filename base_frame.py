@@ -30,9 +30,14 @@ class BaseFrame(tk.Frame):
                           'Inwentaryzacja': {'command': self.inventory}, 'Dokumenty magazynowe': {'menu': magmenu2}}
         self.add_menu_elements(magMenu, mags_menu_list, mags_menu_opts)
 
-        magmenu2.add_command(label='wg dokumentow', command=self.on_mag)
-        magmenu2.add_command(label='wg indeksow')
-        magmenu2.add_command(label='wg grup materialowych i indeksow')
+        #magmenu2.add_command(label='wg dokumentow', command=self.on_mag)
+        #magmenu2.add_command(label='wg indeksow')
+        #magmenu2.add_command(label='wg grup materialowych i indeksow')
+
+        magmenu2_list = ['wg dokumnetow','wg indeksow','wg grup materialowych']
+        magmenu2_opts = {'wg dokumentow':{'command': self.accord_docs},
+                         'wg indeksow':{'command':self.accord_store},
+                         'wg grup materialowych':{'command':self.accord_materials}}
 
         menu_bar.add_cascade(label="Slowniki", underline=0, menu=slowMenu)
         slow_menu = ['Indeksy materialowe', 'Kartoteka kontrahentow', 'Jednostki firmy', 'Jednostki miary', 'Magazyny',
@@ -53,16 +58,16 @@ class BaseFrame(tk.Frame):
         file_menu.add_command(label="Wyjscie", underline=0, command=self.on_exit)
 
     def on_exit(self):
-        self.quit()  # выход из программы
+        self.quit()  # wyjscie
 
     def on_mag(self):
         self.master.change(SecondFrame)  # выпадающее меню
 
     def ab_program(self):
-        self.master.change(AbProgFrame)  # помощь
+        self.master.change(AbProgFrame)  # help
 
     def instr(self):
-        self.master.change(InstructProg)  # помощь
+        self.master.change(InstructProg)  # help
 
     def ind_mat(self):
         self.master.change(IndexMat)  # slowniki
@@ -103,6 +108,15 @@ class BaseFrame(tk.Frame):
     def close_period(self):
         self.master.change(Period_close)
 
+    def accord_docs(self):
+        self.master.change(AccordDoc)
+
+    def accord_store(self):
+        self.master.change(AccordStore)
+
+    def accord_materials(self):
+        self.master.change(AccordMaterials)
+
     @classmethod
     def add_menu_elements(cls, menu, elements, opts=None):
         opts = opts or {}
@@ -126,3 +140,6 @@ from Dokumenty.income_documents import Income_docs
 from Dokumenty.expence_documents import Expence_docs
 from Dokumenty.inwentory_documents import Inventory_Docs
 from Dokumenty.period_close import Period_close
+from Magazyny.according_documents import AccordDoc
+from Magazyny.accordstore import AccordStore
+from Magazyny.accord_group_materials import AccordMaterials
