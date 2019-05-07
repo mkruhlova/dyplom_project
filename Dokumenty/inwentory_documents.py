@@ -1,5 +1,6 @@
 import tkinter as tk
 
+
 class Inventory_Docs(tk.Frame):
     def __init__(self, master=None, **kwargs):
         tk.Frame.__init__(self, master, **kwargs)
