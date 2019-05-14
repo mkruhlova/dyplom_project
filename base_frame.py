@@ -30,14 +30,10 @@ class BaseFrame(tk.Frame):
                           'Inwentaryzacja': {'command': self.inventory}, 'Dokumenty magazynowe': {'menu': magmenu2}}
         self.add_menu_elements(magMenu, mags_menu_list, mags_menu_opts)
 
-        #magmenu2.add_command(label='wg dokumentow', command=self.on_mag)
-        #magmenu2.add_command(label='wg indeksow')
-        #magmenu2.add_command(label='wg grup materialowych i indeksow')
+        magmenu2.add_command(label='wg dokumentow', command=self.on_doc)
+        magmenu2.add_command(label='wg indeksow', command=self.on_ind)
+        magmenu2.add_command(label='wg grup materialowych i indeksow', command=self.on_gmti)
 
-        magmenu2_list = ['wg dokumnetow','wg indeksow','wg grup materialowych']
-        magmenu2_opts = {'wg dokumentow':{'command': self.accord_docs},
-                         'wg indeksow':{'command':self.accord_store},
-                         'wg grup materialowych':{'command':self.accord_materials}}
 
         menu_bar.add_cascade(label="Slowniki", underline=0, menu=slowMenu)
         slow_menu = ['Indeksy materialowe', 'Kartoteka kontrahentow', 'Jednostki firmy', 'Jednostki miary', 'Magazyny',
@@ -60,8 +56,14 @@ class BaseFrame(tk.Frame):
     def on_exit(self):
         self.quit()  # wyjscie
 
-    def on_mag(self):
-        self.master.change(SecondFrame)  # выпадающее меню
+    def on_doc(self):
+        self.master.change(WedlugDocs)  # выпадающее меню
+
+    def on_ind(self):
+        self.master.change(WedlugInd)
+
+    def on_gmti(self):
+        self.master.change(WedlugGrupMatInd)
 
     def ab_program(self):
         self.master.change(AbProgFrame)  # help
@@ -108,15 +110,6 @@ class BaseFrame(tk.Frame):
     def close_period(self):
         self.master.change(Period_close)
 
-    def accord_docs(self):
-        self.master.change(AccordDoc)
-
-    def accord_store(self):
-        self.master.change(AccordStore)
-
-    def accord_materials(self):
-        self.master.change(AccordMaterials)
-
     @classmethod
     def add_menu_elements(cls, menu, elements, opts=None):
         opts = opts or {}
@@ -124,7 +117,9 @@ class BaseFrame(tk.Frame):
             menu.add_cascade(label=el, **opts.get(el, {}))
 
 
-from Magazyny.wg_dok import SecondFrame
+from Magazyny.wg_dok import WedlugDocs
+from Magazyny.wg_grup_mat_i_indeksow import WedlugGrupMatInd
+from Magazyny.wg_indeksor import WedlugInd
 from Pomoc.about_prog import AbProgFrame
 from Pomoc.instruction import InstructProg
 from Slowniki.indeks_material import IndexMat
