@@ -1,5 +1,4 @@
 import tkinter as tk
-from tkinter import messagebox
 
 import config
 from base_frame import BaseFrame
@@ -16,7 +15,11 @@ class AppFrame(tk.Tk):
         self.frame.pack()
 
     def change(self, frame):
+        if self.frame.__class__.__name__ == frame.__name__:
+            return
         self.frame.pack_forget()
+        if hasattr(self.frame, 'table'):
+            self.frame.table.pack_forget()
         self.frame = frame(self)
         self.frame.pack()
 
