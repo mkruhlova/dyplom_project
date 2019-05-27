@@ -89,11 +89,11 @@ class Table(Frame):
                 self.grid_columnconfigure(j, minsize=minwidth)
 
         if height is not None:
-            self._append_n_rows(height)
+            self.append_n_rows(height)
 
         self._on_change_data = on_change_data
 
-    def _append_n_rows(self, n):
+    def append_n_rows(self, n):
         number_of_rows = self._number_of_rows
         number_of_columns = self._number_of_columns
 
@@ -139,7 +139,7 @@ class Table(Frame):
         if number_of_rows > n:
             self._pop_n_rows(number_of_rows - n)
         elif number_of_rows < n:
-            self._append_n_rows(n - number_of_rows)
+            self.append_n_rows(n - number_of_rows)
 
         for i in range(n):
             for j in range(m):
@@ -238,7 +238,7 @@ class Table(Frame):
         if self._on_change_data is not None: self._on_change_data()
 
     def insert_row(self, data, index=END):
-        self._append_n_rows(1)
+        self.append_n_rows(1)
 
         if index == END:
             index = self._number_of_rows - 1

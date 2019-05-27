@@ -1,4 +1,4 @@
-from tkinter import Frame
+from tkinter import Frame, Button
 from tkinter.constants import *
 from base_frame import BaseFrame
 from table import Table
@@ -19,5 +19,16 @@ class Expence_docs(BaseFrame, Frame):
         self.table.pack(fill=X, padx=10, pady=10)
 
         self.table.set_data([[1, 2, 3], [4, 5, 6], [7, 8, 9], [10, 11, 12], [10, 11, 12], [10, 11, 12], [10, 11, 12]])
-        self.table.cell(0, 0, " a fdas fasd fasdf asdf asdfasdf asdf asdfa sdfas asd sadf ")
-        self.table.cell(0, 1, " LOL")
+
+        btn = Button(self, text="Add row", command=self.add_row)
+        btn.pack()
+
+        btn = Button(self, text="Save", command=self.save)
+        btn.pack()
+
+    def add_row(self):
+        self.table.append_n_rows(1)
+
+    def save(self):
+        data = self.table.get_data()
+        print(data)
