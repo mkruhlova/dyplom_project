@@ -24,25 +24,23 @@ class BaseFrame(tk.Frame):
 
         menu_bar.add_cascade(label="Magazyny", underline=0, menu=magMenu)
 
-        mags_menu_list = ['Kartoteki magazynowe', 'Bilans otwarcia', 'Inwentaryzacja', 'Dokumenty magazynowe']
+        mags_menu_list = ['Kartoteki magazynowe', 'Bilans otwarcia', 'Inwentaryzacja']
         mags_menu_opts = {'Kartoteki magazynowe': {'command': self.warerec},
                           'Bilans otwarcia': {'command': self.openbal},
-                          'Inwentaryzacja': {'command': self.inventory}, 'Dokumenty magazynowe': {'menu': magmenu2}}
+                          'Inwentaryzacja': {'command': self.inventory}}
         self.add_menu_elements(magMenu, mags_menu_list, mags_menu_opts)
 
-        magmenu2.add_command(label='wg dokumentow', command=self.on_doc)
-        magmenu2.add_command(label='wg indeksow', command=self.on_ind)
-        magmenu2.add_command(label='wg grup materialowych i indeksow', command=self.on_gmti)
+
 
 
         menu_bar.add_cascade(label="Slowniki", underline=0, menu=slowMenu)
-        slow_menu = ['Indeksy materialowe', 'Kartoteka kontrahentow', 'Jednostki firmy', 'Jednostki miary', 'Magazyny',
-                     'Dokumenty magazynowe']
+        slow_menu = ['Indeksy materialowe', 'Kartoteka kontrahentow', 'Jednostki firmy', 'Jednostki miary', 'Magazyny']
         slow_menu_opts = {'Indeksy materialowe': {'command': self.ind_mat},
                           'Kartoteka kontrahentow': {'command': self.kardfile},
-                          'Jednostki firmy': {'command': self.compdevision},
+                          'Placowki': {'command': self.compdevision},
                           'Jednostki miary': {'command': self.unitdevision},
-                          'Magazyny': {'command': self.storage}, 'Dokumenty magazynowe': {'command': self.storagedocs}}
+                          'Jednostki firmy': {'command':self.compdevision},
+                          'Magazyny': {'command': self.storage}}
         self.add_menu_elements(slowMenu, slow_menu, slow_menu_opts)
 
         menu_bar.add_cascade(label="Pomoc", underline=0, menu=helpMenu)
@@ -97,6 +95,7 @@ class BaseFrame(tk.Frame):
 
     def inventory(self):
         self.master.change(Inventory_store)  # magazyny
+
 
     def income_docs(self):
         self.master.change(Income_docs)

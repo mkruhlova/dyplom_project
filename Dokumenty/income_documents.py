@@ -1,15 +1,15 @@
-import tkinter as tk
+from tkinter import Frame, Button
 from tkinter.constants import *
 from base_frame import BaseFrame
 from table import Table
 
-class Income_docs(BaseFrame, tk.Frame):
+class Income_docs(BaseFrame, Frame):
     def __init__(self, master=None, **kwargs):
-        tk.Frame.__init__(self, master, **kwargs)
+        Frame.__init__(self, master, **kwargs)
         self.master = master
         self.table = None
 
-        master.title("Dokumenty rozchodowe")
+        master.title("Dokumenty przychodowe")
         master.geometry("850x650+300+200")
         self.init_table()
 

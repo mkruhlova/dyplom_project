@@ -9,7 +9,7 @@ class Inventory_Docs(BaseFrame, tk.Frame):
         self.master = master
         self.table = None
 
-        master.title("Dokumenty rozchodowe")
+        master.title("Dokumenty inwentaryzacyjne")
         master.geometry("850x650+300+200")
         self.init_table()
 
