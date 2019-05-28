@@ -119,7 +119,7 @@ class Table(Frame):
 
         self._number_of_rows += n
 
-    def _pop_n_rows(self, n):
+    def pop_n_rows(self, n=1):
         number_of_rows = self._number_of_rows
         number_of_columns = self._number_of_columns
         for i in range(number_of_rows - n + 1, number_of_rows + 1):
@@ -137,7 +137,7 @@ class Table(Frame):
         number_of_rows = self._number_of_rows
 
         if number_of_rows > n:
-            self._pop_n_rows(number_of_rows - n)
+            self.pop_n_rows(number_of_rows - n)
         elif number_of_rows < n:
             self.append_n_rows(n - number_of_rows)
 
@@ -233,7 +233,7 @@ class Table(Frame):
 
             i += 1
 
-        self._pop_n_rows(1)
+        self.pop_n_rows(1)
 
         if self._on_change_data is not None: self._on_change_data()
 
