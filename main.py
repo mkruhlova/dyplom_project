@@ -41,4 +41,5 @@ class MainFrame(BaseFrame, tk.Frame):
 
 if __name__ == "__main__":
     app = AppFrame()
+    # app.resizable(0, 0)
     app.mainloop()
