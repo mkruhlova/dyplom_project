@@ -1,8 +1,14 @@
 import tkinter as tk
 
+
+
 import config
 from base_frame import BaseFrame
 from login import LoginFrame
+
+
+
+
 
 
 class AppFrame(tk.Tk):
@@ -30,6 +36,7 @@ class MainFrame(BaseFrame, tk.Frame):
         master.title(config.APP_TITLE)
         master.geometry("850x650+300+200")
         self.init_ui()
+
 
 
 if __name__ == "__main__":
