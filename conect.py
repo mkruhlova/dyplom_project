@@ -25,16 +25,16 @@
 
 import pymysql
 
-conn = pymysql.connect(host='localhost', port=3306, user='root', passwd='root', db='system_magazynowy')
+# conn = pymysql.connect(host='localhost', port=3306, user='root', passwd='root', db='system_magazynowy')
 
-cur = conn.cursor()
-cur.execute("SELECT * FROM system_magazynowy.`kartoteka indeksow materialowych`")
-
-print(cur.description)
-print()
-
-for row in cur:
-    print(row)
-
-cur.close()
-conn.close()
+cur = None #conn.cursor()
+# cur.execute("SELECT * FROM system_magazynowy.`kartoteka indeksow materialowych`")
+#
+# print(cur.description)
+# print()
+#
+# for row in cur:
+#     print(row)
+#
+# cur.close()
+# conn.close()

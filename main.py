@@ -1,6 +1,6 @@
 import tkinter as tk
 
-
+from conect import cur
 
 import config
 from base_frame import BaseFrame

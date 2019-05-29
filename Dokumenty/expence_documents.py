@@ -31,4 +31,9 @@ class Expence_docs(BaseFrame, Frame):
 
     def save(self):
         data = self.table.get_data()
+        s = ''
+        for lst in data:
+            s += ' '.join(lst) + ' '
+        print(s)
+        self.cur.execute("INSERT * FROM system_magazynowy.`kartoteka indeksow materialowych`")
         print(data)

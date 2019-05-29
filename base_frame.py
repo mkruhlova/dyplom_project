@@ -1,9 +1,12 @@
 import tkinter as tk
+from conect import cur
 
 
 class BaseFrame(tk.Frame):
 
     def init_ui(self):
+        self.cur = cur
+
         menu_bar = tk.Menu(self.master)
         self.master.config(menu=menu_bar)
 
