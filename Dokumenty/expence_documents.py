@@ -35,5 +35,5 @@ class Expence_docs(BaseFrame, Frame):
         for lst in data:
             s += ' '.join(lst) + ' '
         print(s)
-        self.cur.execute("INSERT * FROM system_magazynowy.`kartoteka indeksow materialowych`")
+        self.cur.execute("INSERT INTO slownik jednostek firm (ID, Nazwa jednostki, Symbol)  VALUES '1','A Aagrh!','the';")
         print(data)

@@ -17,7 +17,7 @@ class KardAg(BaseFrame, Frame):
         self.table = Table(self.master, ["Nazwa Kontrahenta", "Adres kontrahenta", "Symbol Kontahenta"], column_minwidths=[20, 50, None])
         self.table.pack(fill=X, padx=10, pady=10)
 
-        self.table.set_data([[1, 2, 3], [4, 5, 6], [7, 8, 9], [10, 11, 12]])
+        self.table.set_data([[], [], [], []])
 
         btn = Button(self, text="Add row", command=self.add_row)
         btn.pack()
