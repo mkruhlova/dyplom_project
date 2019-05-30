@@ -4,6 +4,7 @@ from base_frame import BaseFrame
 from table import Table
 from conect import insert_data
 from conect import get_kartoteka
+from conect import delete_data
 
 
 class CompDev(BaseFrame, Frame):
@@ -48,4 +49,4 @@ class CompDev(BaseFrame, Frame):
 
 
     def delete_row(self):
-        self.table.pop_n_rows()
+        self.table.pop_n_rows(delete_data)

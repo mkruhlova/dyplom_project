@@ -16,8 +16,14 @@ def create_cursor(func):
 @create_cursor
 def insert_data(cur, ID, Nazwa_jednostki, Symbol):
     s = "INSERT INTO `slownik jednostki firmy`(`ID`,`Nazwa_jednostki`,`Symbol`) " \
-        "VALUES ({},{},{})".format(ID, Nazwa_jednostki, Symbol)
+        "VALUES ('{}','{}','{}')".format(ID, Nazwa_jednostki, Symbol)
 
+    cur.execute(s)
+    conn.commit()
+
+@create_cursor
+def delete_data(cur, ID,Nazwa_jednostki, Symbol):
+    s = "DELETE FROM 'slownik jednostki firmy' WHERE id=% "
     cur.execute(s)
     conn.commit()
 
@@ -25,14 +31,14 @@ def insert_data(cur, ID, Nazwa_jednostki, Symbol):
 @create_cursor
 def insert_data_unit(cur, ID, Nazwa_jednostki, Symbol):
     s = "INSERT INTO `slownik jednostek miar`(`ID`,`Nazwa_jednostki`,`Symbol`) " \
-        "VALUES ({},{},{})".format(ID, Nazwa_jednostki, Symbol)
+        "VALUES ('{}','{}','{}')".format(ID, Nazwa_jednostki, Symbol)
 
     cur.execute(s)
     conn.commit()
 
 
 @create_cursor
-def get_kartoteka(cur):
+def get_kartoteka_unit(cur):
     s = "SELECT * FROM `slownik jednostek miar`"
     cur.execute(s)
 

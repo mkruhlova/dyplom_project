@@ -3,7 +3,8 @@ from tkinter.constants import *
 from base_frame import BaseFrame
 from table import Table
 from conect import insert_data_unit
-from conect import get_kartoteka
+from conect import get_kartoteka_unit
+from conect import delete_data
 
 
 class UnitDev(BaseFrame, Frame):
@@ -19,7 +20,7 @@ class UnitDev(BaseFrame, Frame):
     def init_table(self):
         self.table = Table(self.master, ["ID", "Nazwa jednostki", "Symbol jednostki"], column_minwidths=[20, 50, None])
         self.table.pack(fill=X, padx=10, pady=10)
-        rows = get_kartoteka()
+        rows = get_kartoteka_unit()
         result = []
         for row in rows:
             result.append(row)
@@ -45,6 +46,6 @@ class UnitDev(BaseFrame, Frame):
         insert_data_unit(ID=first_row[0], Nazwa_jednostki=first_row[1], Symbol=first_row[2])
 
     def delete_row(self):
-        self.table.pop_n_rows()
+        self.table.pop_n_rows(delete_data)
 
 
