@@ -24,7 +24,7 @@ class IndexMat(BaseFrame, Frame):
     def init_table(self):
         units = self.get_units()
         self.table = Table(self.master, self._columns, combobox_column=2, combobox_column_data=units,
-                           column_minwidths=[50, 100, 100, 100, 100], minwidth=20)
+                           column_minwidths=[None, None, None, None, None])
         self.table.pack(fill=X, padx=10, pady=10)
         rows = get_kartoteka_index()
         results = []

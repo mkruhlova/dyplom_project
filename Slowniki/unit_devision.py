@@ -18,7 +18,8 @@ class UnitDev(BaseFrame, Frame):
         self.init_table()
 
     def init_table(self):
-        self.table = Table(self.master, ["ID", "Nazwa jednostki", "Symbol jednostki"], column_minwidths=[20, 50, None])
+        self.table = Table(self.master, ["ID", "Nazwa jednostki", "Symbol jednostki"],
+                           column_minwidths=[None, None, None])
         self.table.pack(fill=X, padx=10, pady=10)
         rows = get_kartoteka_unit()
         result = []

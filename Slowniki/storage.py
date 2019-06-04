@@ -20,8 +20,9 @@ class Storage(BaseFrame, Frame):
         self.table = Table(self.master, ["Symbol magazynu", "Nazwa magazynu", "Data otwarcia", "Kierownik magazynu",
                                          "Status Magazynu", "Status inwentaryzacji", "Data inwentaryzacji",
                                          "Symbol placowki",
-                                         "ID Dokumentu"], column_minwidths=[93, 93, 93, 93, 93, 93, 93, 93, 93])
-        self.table.pack(fill=X, padx=10, pady=10)
+                                         "ID Dokumentu"], column_minwidths=[None, None, None, None, None, None, None,
+                                                                            None, None])
+        self.table.pack(fill=X, padx=5, pady=5)
 
         self.table.set_data([[], [], [], []])
 

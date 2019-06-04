@@ -9,15 +9,14 @@ class BaseFrame(tk.Frame):
 
         file_menu = tk.Menu(menu_bar)
         magMenu = tk.Menu(menu_bar)
-        magmenu2 = tk.Menu(magMenu, tearoff=0)
+        #magmenu2 = tk.Menu(magMenu, tearoff=0)
         slowMenu = tk.Menu(menu_bar)
         helpMenu = tk.Menu(menu_bar)
 
         menu_bar.add_cascade(label="Dokumenty", underline=0, menu=file_menu)
-        files_menu_list = ['Dokumenty przychodowe', 'Dokumenty rozchodowe', 'Dokumenty inwentaryzacyjne',
+        files_menu_list = ['Dokumenty PZ/RW', 'Dokumenty inwentaryzacyjne',
                            'Zamkniecie miesiaca']
-        files_menu_opts = {'Dokumenty przychodowe': {'command': self.income_docs},
-                           'Dokumenty rozchodowe': {'command': self.expence_docs},
+        files_menu_opts = {'Dokumenty PZ/RW': {'command': self.expence_docs},
                            'Dokumenty inwentaryzacyjne': {'command': self.inwent_docs},
                            'Zamkniecie miesiaca': {'command': self.close_period}}
         self.add_menu_elements(file_menu, files_menu_list, files_menu_opts)
@@ -86,8 +85,8 @@ class BaseFrame(tk.Frame):
     def inventory(self):
         self.master.change(Inventory_store)  # magazyny
 
-    def income_docs(self):
-        self.master.change(Income_docs)
+    # def income_docs(self):
+    #     self.master.change(Income_docs)
 
     def expence_docs(self):
         self.master.change(Expence_docs)
@@ -115,7 +114,7 @@ from Slowniki.docsstore import DocsStore
 from Magazyny.warehouse_records import Warehouse_Rec
 from Magazyny.opening_balance import Balance_open
 from Magazyny.inventory import Inventory_store
-from Dokumenty.income_documents import Income_docs
+# from Dokumenty.income_documents import Income_docs
 from Dokumenty.expence_documents import Expence_docs
 from Dokumenty.inwentory_documents import Inventory_Docs
 from Dokumenty.period_close import Period_close

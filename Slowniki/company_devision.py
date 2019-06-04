@@ -18,7 +18,7 @@ class CompDev(BaseFrame, Frame):
         self.init_table()
 
     def init_table(self):
-        self.table = Table(self.master, ["ID", "Nazwa Placowki", "Symbol Placowki"], column_minwidths=[10, None, None])
+        self.table = Table(self.master, ["ID", "Nazwa Placowki", "Symbol Placowki"], column_minwidths=[None, None, None])
         self.table.pack(fill=X, padx=10, pady=10)
         rows = get_kartoteka()
         result = []
@@ -26,7 +26,6 @@ class CompDev(BaseFrame, Frame):
             result.append(row)
         if result:
             self.table.set_data(result)
-
 
         self.row_id_input_label = Label(self, text='Put your id: ')
         self.row_id_input_label.pack(side='left')

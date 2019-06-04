@@ -61,7 +61,6 @@ def delete_data_unit(cur, index):
 def get_kartoteka_index(cur):
     s = "SELECT * FROM `kartoteka indeksow materialowych`"
     cur.execute(s)
-
     return cur
 
 
@@ -83,3 +82,25 @@ def select_units(cur):
     s = "SELECT `Nazwa_jednostki` FROM system_magazynowy.`slownik jednostek miar`"
     cur.execute(s)
     return cur
+
+
+@create_cursor
+def get_kartoteka__agent(cur):
+    s = "SELECT * FROM system_magazynowy.`kartoteka kontrahentow`"
+    cur.execute(s)
+    return cur
+
+
+@create_cursor
+def insert_data_agent(cur, ID, Nazwa_kontrahenta, Adres_kontrahenta, Symbol_kontrahenta):
+    s = "INSERT INTO `kartoteka kontrahentow`(`ID`,`Nazwa_kontrahenta`,`Adres_kontrahenta`,`Symbol_kontrahenta`) VALUES ('{}','{}','{}','{}')".format(
+        ID, Nazwa_kontrahenta, Adres_kontrahenta, Symbol_kontrahenta)
+    cur.execute(s)
+
+
+@create_cursor
+def delete_data_agent(cur, index: str):
+    s = "DELETE FROM `kartoteka kontrahentow` WHERE id=%s" % index
+    cur.execute(s)
+
+

@@ -1,4 +1,4 @@
-from tkinter import Frame, Button
+from tkinter import Frame, Button, ttk, Label
 from tkinter.constants import *
 from base_frame import BaseFrame
 from table import Table
@@ -10,15 +10,29 @@ class Expence_docs(BaseFrame, Frame):
         self.master = master
         self.table = None
 
-        master.title("Dokumenty rozchodowe")
+        # w = Label(self, text="Red", bg="red", fg="white")
+        # w.pack(anchor="nw")
+        self.combo = ttk.Combobox(master, values=["PZ", "RW"])
+        self.combo.pack(padx=32, pady=8, anchor="nw")
+        self.label_of_combobox = Label(self, text='Typ dokumenta:')
+        self.label_of_combobox.pack(anchor="n")
+
+        self.combo = ttk.Combobox(master, values=["Magazyny"])
+        self.combo.pack(padx=32, pady=8, anchor="nw")
+
+        self.combo = ttk.Combobox(master, values=["Data"])
+        self.combo.pack(padx=32, pady=8, anchor="nw")
+
+        master.title("Dokumenty PZ/RW")
         master.geometry("850x650+300+200")
         self.init_table()
 
     def init_table(self):
-        self.table = Table(self.master, ["column A", "column B", "column C"], column_minwidths=[20, 50, None])
+        self.table = Table(self.master, ["Nr Dok", "Data Dok", "Data Ksiegowania", "Wartosc", "Ilosc"],
+                           column_minwidths=[20, 50, 50, 50, 50])
         self.table.pack(fill=X, padx=10, pady=10)
 
-        self.table.set_data([[1, 2, 3], [4, 5, 6], [7, 8, 9], [10, 11, 12], [10, 11, 12], [10, 11, 12], [10, 11, 12]])
+        self.table.set_data([[], [], [], [], [], [], []])
 
         btn = Button(self, text="Add row", command=self.add_row)
         btn.pack()
@@ -35,5 +49,6 @@ class Expence_docs(BaseFrame, Frame):
         for lst in data:
             s += ' '.join(lst) + ' '
         print(s)
-        self.cur.execute("INSERT INTO slownik jednostek firm (ID, Nazwa jednostki, Symbol)  VALUES '1','A Aagrh!','the';")
+        self.cur.execute(
+            "INSERT INTO slownik jednostek firm (ID, Nazwa jednostki, Symbol)  VALUES '1','A Aagrh!','the';")
         print(data)
