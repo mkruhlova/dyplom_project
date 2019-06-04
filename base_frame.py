@@ -1,12 +1,9 @@
 import tkinter as tk
-# from conect import cur
 
 
 class BaseFrame(tk.Frame):
 
     def init_ui(self):
-        # self.cur = cur
-
         menu_bar = tk.Menu(self.master)
         self.master.config(menu=menu_bar)
 
@@ -33,16 +30,13 @@ class BaseFrame(tk.Frame):
                           'Inwentaryzacja': {'command': self.inventory}}
         self.add_menu_elements(magMenu, mags_menu_list, mags_menu_opts)
 
-
-
-
         menu_bar.add_cascade(label="Slowniki", underline=0, menu=slowMenu)
         slow_menu = ['Indeksy materialowe', 'Kartoteka kontrahentow', 'Jednostki firmy', 'Jednostki miary', 'Magazyny']
         slow_menu_opts = {'Indeksy materialowe': {'command': self.ind_mat},
                           'Kartoteka kontrahentow': {'command': self.kardfile},
                           'Placowki': {'command': self.compdevision},
                           'Jednostki miary': {'command': self.unitdevision},
-                          'Jednostki firmy': {'command':self.compdevision},
+                          'Jednostki firmy': {'command': self.compdevision},
                           'Magazyny': {'command': self.storage}}
         self.add_menu_elements(slowMenu, slow_menu, slow_menu_opts)
 
@@ -57,16 +51,9 @@ class BaseFrame(tk.Frame):
     def on_exit(self):
         self.quit()  # wyjscie
 
-    def on_doc(self):
-        self.master.change(WedlugDocs)  # выпадающее меню
-
-    def on_ind(self):
-        self.master.change(WedlugInd)
-
-    def on_gmti(self):
-        self.master.change(WedlugGrupMatInd)
-
     def ab_program(self):
+        from Pomoc.about_prog import AbProgFrame  # TODO
+
         self.master.change(AbProgFrame)  # help
 
     def instr(self):
@@ -99,7 +86,6 @@ class BaseFrame(tk.Frame):
     def inventory(self):
         self.master.change(Inventory_store)  # magazyny
 
-
     def income_docs(self):
         self.master.change(Income_docs)
 
@@ -119,10 +105,6 @@ class BaseFrame(tk.Frame):
             menu.add_cascade(label=el, **opts.get(el, {}))
 
 
-from Magazyny.wg_dok import WedlugDocs
-from Magazyny.wg_grup_mat_i_indeksow import WedlugGrupMatInd
-from Magazyny.wg_indeksor import WedlugInd
-from Pomoc.about_prog import AbProgFrame
 from Pomoc.instruction import InstructProg
 from Slowniki.indeks_material import IndexMat
 from Slowniki.kard_agent import KardAg
@@ -137,6 +119,3 @@ from Dokumenty.income_documents import Income_docs
 from Dokumenty.expence_documents import Expence_docs
 from Dokumenty.inwentory_documents import Inventory_Docs
 from Dokumenty.period_close import Period_close
-from Magazyny.according_documents import AccordDoc
-from Magazyny.accordstore import AccordStore
-from Magazyny.accord_group_materials import AccordMaterials

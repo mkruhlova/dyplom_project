@@ -1,7 +1,9 @@
 from tkinter import Frame, Button
 from tkinter.constants import *
+
 from base_frame import BaseFrame
 from table import Table
+
 
 class Storage(BaseFrame, Frame):
     def __init__(self, master=None, **kwargs):
@@ -10,16 +12,18 @@ class Storage(BaseFrame, Frame):
         self.table = None
 
         master.title("Magazyny")
+        # master.geometry("{0}x{1}+0+0".format(master.winfo_screenwidth(), master.winfo_screenheight()))
         master.geometry("850x650+300+200")
         self.init_table()
 
     def init_table(self):
         self.table = Table(self.master, ["Symbol magazynu", "Nazwa magazynu", "Data otwarcia", "Kierownik magazynu",
-                                         "Status Magazynu","Status inwentaryzacji","Data inwentaryzacji", "Symbol placowki",
-                                         "ID Dokumentu"], column_minwidths=[20, 20, 20, 20, 20, 20, 20, 20, 20])
+                                         "Status Magazynu", "Status inwentaryzacji", "Data inwentaryzacji",
+                                         "Symbol placowki",
+                                         "ID Dokumentu"], column_minwidths=[93, 93, 93, 93, 93, 93, 93, 93, 93])
         self.table.pack(fill=X, padx=10, pady=10)
 
-        self.table.set_data([[1, 2, 3], [4, 5, 6], [7, 8, 9], [10, 11, 12]])
+        self.table.set_data([[], [], [], []])
 
         btn = Button(self, text="Add row", command=self.add_row)
         btn.pack()

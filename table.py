@@ -1,18 +1,20 @@
 from tkinter import Frame, W, Message, CENTER, Label, X, N, E, S, StringVar, END, Entry
+from tkinter.ttk import Combobox
+from typing import List
 
 
 class Cell(Frame):
     """Base class for cells"""
 
 
-class Data_Cell(Cell):
+class DataEntryCell(Cell):
     def __init__(self, master, variable, anchor=W, bordercolor=None, borderwidth=1, padx=0, pady=0, background=None,
                  foreground=None, font=None):
         Cell.__init__(self, master, background=background, highlightbackground=bordercolor, highlightcolor=bordercolor,
                       highlightthickness=borderwidth, bd=0)
 
         self._message_widget = Entry(self, bd=0, textvariable=variable, font=font, background=background,
-                                       foreground=foreground)
+                                     foreground=foreground)
         self._message_widget.pack(expand=True, padx=padx, pady=pady, anchor=anchor)
 
         self.bind("<Configure>", self._on_configure)
@@ -21,7 +23,25 @@ class Data_Cell(Cell):
         self._message_widget.configure(width=event.width)
 
 
-class Header_Cell(Cell):
+class DataComboboxCell(Cell):
+    def __init__(self, master, variable, values=None, anchor=W, bordercolor=None, borderwidth=1, padx=0, pady=0,
+                 background=None,
+                 foreground=None, font=None):
+        Cell.__init__(self, master, background=background, highlightbackground=bordercolor, highlightcolor=bordercolor,
+                      highlightthickness=borderwidth, bd=0)
+
+        values = values or []
+        self._message_widget = Combobox(self, textvariable=variable, values=values, font=font, background=background,
+                                        foreground=foreground)
+        self._message_widget.pack(expand=True, padx=padx, pady=pady, anchor=anchor)
+
+        self.bind("<Configure>", self._on_configure)
+
+    def _on_configure(self, event):
+        self._message_widget.configure(width=event.width)
+
+
+class HeaderCell(Cell):
     def __init__(self, master, text, bordercolor=None, borderwidth=1, padx=None, pady=None, background=None,
                  foreground=None, font=None, anchor=CENTER):
         Cell.__init__(self, master, background=background, highlightbackground=bordercolor, highlightcolor=bordercolor,
@@ -35,7 +55,9 @@ class Header_Cell(Cell):
 
 
 class Table(Frame):
-    def __init__(self, master, columns, column_weights=None, column_minwidths=None, height=None, minwidth=20,
+    def __init__(self, master, columns, combobox_column: int = None, combobox_column_data: List = None,
+                 column_weights=None, column_minwidths=None,
+                 height=None, minwidth=20,
                  minheight=20, padx=5, pady=5, cell_font=None, cell_foreground="black", cell_background="white",
                  cell_anchor=W, header_font=None, header_background="white", header_foreground="black",
                  header_anchor=CENTER, bordercolor="#999999", innerborder=True, outerborder=True,
@@ -52,6 +74,8 @@ class Table(Frame):
 
         self._number_of_rows = 0
         self._number_of_columns = len(columns)
+        self._combobox_column = combobox_column
+        self._combobox_column_data = combobox_column_data
 
         self._stripped_rows = stripped_rows
 
@@ -68,9 +92,9 @@ class Table(Frame):
         for j in range(len(columns)):
             column_name = columns[j]
 
-            header_cell = Header_Cell(self, text=column_name, borderwidth=self._innerborder_width, font=header_font,
-                                      background=header_background, foreground=header_foreground, padx=padx, pady=pady,
-                                      bordercolor=bordercolor, anchor=header_anchor)
+            header_cell = HeaderCell(self, text=column_name, borderwidth=self._innerborder_width, font=header_font,
+                                     background=header_background, foreground=header_foreground, padx=padx, pady=pady,
+                                     bordercolor=bordercolor, anchor=header_anchor)
             header_cell.grid(row=0, column=j, sticky=N + E + W + S)
 
         if column_weights is None:
@@ -103,16 +127,18 @@ class Table(Frame):
                 var = StringVar()
                 list_of_vars.append(var)
 
-                if self._stripped_rows:
-                    cell = Data_Cell(self, borderwidth=self._innerborder_width, variable=var,
-                                     bordercolor=self._bordercolor, padx=self._padx, pady=self._pady,
-                                     background=self._stripped_rows[(i + 1) % 2], foreground=self._cell_foreground,
-                                     font=self._cell_font, anchor=self._cell_anchor)
+                bg = self._stripped_rows[(i + 1) % 2] if self._stripped_rows else self._cell_background
+                if j != self._combobox_column:
+                    cell = DataEntryCell(self, borderwidth=self._innerborder_width, variable=var,
+                                         bordercolor=self._bordercolor, padx=self._padx, pady=self._pady,
+                                         background=bg, foreground=self._cell_foreground,
+                                         font=self._cell_font, anchor=self._cell_anchor)
                 else:
-                    cell = Data_Cell(self, borderwidth=self._innerborder_width, variable=var,
-                                     bordercolor=self._bordercolor, padx=self._padx, pady=self._pady,
-                                     background=self._cell_background, foreground=self._cell_foreground,
-                                     font=self._cell_font, anchor=self._cell_anchor)
+                    cell = DataComboboxCell(self, borderwidth=self._innerborder_width, variable=var,
+                                            values=self._combobox_column_data,
+                                            bordercolor=self._bordercolor, padx=self._padx, pady=self._pady,
+                                            background=bg, foreground=self._cell_foreground,
+                                            font=self._cell_font, anchor=self._cell_anchor)
                 cell.grid(row=i, column=j, sticky=N + E + W + S)
 
             self._data_vars.append(list_of_vars)
@@ -221,15 +247,16 @@ class Table(Frame):
 
         if self._on_change_data is not None: self._on_change_data()
 
-    def delete_row(self, index):
+    def delete_row(self, index: int):
         i = index
-        while i < self._number_of_rows:
+        while i < self._number_of_rows - 1:
             row_of_vars_1 = self._data_vars[i]
             row_of_vars_2 = self._data_vars[i + 1]
 
             j = 0
             while j < self._number_of_columns:
-                row_of_vars_1[j].set(row_of_vars_2[j])
+                row_of_vars_1[j].set(row_of_vars_2[j].get())
+                j += 1
 
             i += 1
 
