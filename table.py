@@ -1,6 +1,6 @@
 from tkinter import Frame, W, Message, CENTER, Label, X, N, E, S, StringVar, END, Entry
 from tkinter.ttk import Combobox
-from typing import List
+from typing import Dict
 
 
 class Cell(Frame):
@@ -17,10 +17,10 @@ class DataEntryCell(Cell):
                                      foreground=foreground)
         self._message_widget.pack(expand=True, padx=padx, pady=pady, anchor=anchor)
 
-        self.bind("<Configure>", self._on_configure)
-
-    def _on_configure(self, event):
-        self._message_widget.configure(width=event.width)
+    #     self.bind("<Configure>", self._on_configure)
+    #
+    # def _on_configure(self, event):
+    #     self._message_widget.configure(width=event.width)
 
 
 class DataComboboxCell(Cell):
@@ -34,11 +34,6 @@ class DataComboboxCell(Cell):
         self._message_widget = Combobox(self, textvariable=variable, values=values, font=font, background=background,
                                         foreground=foreground)
         self._message_widget.pack(expand=True, padx=padx, pady=pady, anchor=anchor)
-
-        self.bind("<Configure>", self._on_configure)
-
-    def _on_configure(self, event):
-        self._message_widget.configure(width=event.width)
 
 
 class HeaderCell(Cell):
@@ -55,13 +50,28 @@ class HeaderCell(Cell):
 
 
 class Table(Frame):
-    def __init__(self, master, columns, combobox_column: int = None, combobox_column_data: List = None,
-                 column_weights=None, column_minwidths=None,
-                 height=None, minwidth=20,
-                 minheight=20, padx=3, pady=3, cell_font=None, cell_foreground="black", cell_background="white",
-                 cell_anchor=W, header_font=None, header_background="white", header_foreground="black",
-                 header_anchor=CENTER, bordercolor="#999999", innerborder=True, outerborder=True,
-                 stripped_rows=("#EEEEEE", "white"), on_change_data=None):
+    def __init__(self,
+                 master,
+                 columns,
+                 comboboxes: Dict = None,
+                 column_weights=None,
+                 column_minwidths=None,
+                 height=None,
+                 padx=3, pady=3,
+                 cell_font=None,
+                 cell_foreground="black",
+                 cell_background="white",
+                 cell_anchor=W,
+                 header_font=None,
+                 header_background="white",
+                 header_foreground="black",
+                 header_anchor=CENTER,
+                 bordercolor="#999999",
+                 innerborder=True,
+                 outerborder=True,
+                 stripped_rows=("#EEEEEE", "white"),
+                 on_change_data=None):
+
         outerborder_width = 1 if outerborder else 0
 
         Frame.__init__(self, master, highlightbackground=bordercolor, highlightcolor=bordercolor,
@@ -74,8 +84,7 @@ class Table(Frame):
 
         self._number_of_rows = 0
         self._number_of_columns = len(columns)
-        self._combobox_column = combobox_column
-        self._combobox_column_data = combobox_column_data
+        self._comboboxes = comboboxes or {}
 
         self._stripped_rows = stripped_rows
 
@@ -103,7 +112,8 @@ class Table(Frame):
         else:
             for j, weight in enumerate(column_weights):
                 self.grid_columnconfigure(j, weight=weight)
-
+        if column_minwidths is None:
+            column_minwidths = [None for _ in columns]
         if column_minwidths is not None:
             self.update_idletasks()
             for j, minwidth in enumerate(column_minwidths):
@@ -128,14 +138,14 @@ class Table(Frame):
                 list_of_vars.append(var)
 
                 bg = self._stripped_rows[(i + 1) % 2] if self._stripped_rows else self._cell_background
-                if j != self._combobox_column:
+                if str(j) not in self._comboboxes.keys():
                     cell = DataEntryCell(self, borderwidth=self._innerborder_width, variable=var,
                                          bordercolor=self._bordercolor, padx=self._padx, pady=self._pady,
                                          background=bg, foreground=self._cell_foreground,
                                          font=self._cell_font, anchor=self._cell_anchor)
                 else:
                     cell = DataComboboxCell(self, borderwidth=self._innerborder_width, variable=var,
-                                            values=self._combobox_column_data,
+                                            values=self._comboboxes[str(j)],
                                             bordercolor=self._bordercolor, padx=self._padx, pady=self._pady,
                                             background=bg, foreground=self._cell_foreground,
                                             font=self._cell_font, anchor=self._cell_anchor)

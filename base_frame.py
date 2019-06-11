@@ -9,31 +9,32 @@ class BaseFrame(tk.Frame):
 
         file_menu = tk.Menu(menu_bar)
         magMenu = tk.Menu(menu_bar)
-        #magmenu2 = tk.Menu(magMenu, tearoff=0)
+        # magmenu2 = tk.Menu(magMenu, tearoff=0)
         slowMenu = tk.Menu(menu_bar)
         helpMenu = tk.Menu(menu_bar)
 
         menu_bar.add_cascade(label="Dokumenty", underline=0, menu=file_menu)
-        files_menu_list = ['Dokumenty PZ/RW', 'Dokumenty inwentaryzacyjne',
+        files_menu_list = ['Dokumenty Przychodowe', 'Dokumenty Rozchodowe',
                            'Zamkniecie miesiaca']
-        files_menu_opts = {'Dokumenty PZ/RW': {'command': self.expence_docs},
-                           'Dokumenty inwentaryzacyjne': {'command': self.inwent_docs},
+        files_menu_opts = {'Dokumenty Przychodowe': {'command': self.expence_docs},
+                           'Dokumenty Rozchodowe': {'command': self.income_docs},
                            'Zamkniecie miesiaca': {'command': self.close_period}}
         self.add_menu_elements(file_menu, files_menu_list, files_menu_opts)
 
         menu_bar.add_cascade(label="Magazyny", underline=0, menu=magMenu)
 
-        mags_menu_list = ['Kartoteki magazynowe', 'Bilans otwarcia', 'Inwentaryzacja']
+        mags_menu_list = ['Kartoteki magazynowe', 'Bilans otwarcia']
         mags_menu_opts = {'Kartoteki magazynowe': {'command': self.warerec},
                           'Bilans otwarcia': {'command': self.openbal},
                           'Inwentaryzacja': {'command': self.inventory}}
         self.add_menu_elements(magMenu, mags_menu_list, mags_menu_opts)
 
         menu_bar.add_cascade(label="Slowniki", underline=0, menu=slowMenu)
-        slow_menu = ['Indeksy materialowe', 'Kartoteka kontrahentow', 'Jednostki firmy', 'Jednostki miary', 'Magazyny']
+        slow_menu = ['Indeksy materialowe', 'Kartoteka kontrahentow', 'Grupy materialowe','Jednostki firmy', 'Jednostki miary', 'Magazyny']
         slow_menu_opts = {'Indeksy materialowe': {'command': self.ind_mat},
                           'Kartoteka kontrahentow': {'command': self.kardfile},
                           'Placowki': {'command': self.compdevision},
+                          'Grupy materialowe':{'command':self.groupmaterials},
                           'Jednostki miary': {'command': self.unitdevision},
                           'Jednostki firmy': {'command': self.compdevision},
                           'Magazyny': {'command': self.storage}}
@@ -70,6 +71,10 @@ class BaseFrame(tk.Frame):
     def unitdevision(self):
         self.master.change(UnitDev)  # slowniki
 
+    def groupmaterials(self):
+        self.master.change(GroupMaterials)  # slowniki
+
+
     def storage(self):
         self.master.change(Storage)  # slowniki
 
@@ -85,14 +90,11 @@ class BaseFrame(tk.Frame):
     def inventory(self):
         self.master.change(Inventory_store)  # magazyny
 
-    # def income_docs(self):
-    #     self.master.change(Income_docs)
+    def income_docs(self):
+        self.master.change(Income_docs)
 
     def expence_docs(self):
         self.master.change(Expence_docs)
-
-    def inwent_docs(self):
-        self.master.change(Inventory_Docs)
 
     def close_period(self):
         self.master.change(Period_close)
@@ -111,10 +113,10 @@ from Slowniki.company_devision import CompDev
 from Slowniki.unit_devision import UnitDev
 from Slowniki.storage import Storage
 from Slowniki.docsstore import DocsStore
+from Slowniki.material_grup import GroupMaterials
 from Magazyny.warehouse_records import Warehouse_Rec
 from Magazyny.opening_balance import Balance_open
 from Magazyny.inventory import Inventory_store
-# from Dokumenty.income_documents import Income_docs
+from Dokumenty.income_documents import Income_docs
 from Dokumenty.expence_documents import Expence_docs
-from Dokumenty.inwentory_documents import Inventory_Docs
 from Dokumenty.period_close import Period_close

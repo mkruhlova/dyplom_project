@@ -1,28 +1,25 @@
-from tkinter import Frame, Button, Label, Entry, messagebox
+from tkinter import Frame, Button, Entry, Label, messagebox, ttk
 from tkinter.constants import *
-
 from base_frame import BaseFrame
-from conect import delete_data_agent
-from conect import insert_data_agent
-from conect import get_kartoteka_agent
+from conect import get_group_materials, insert_group_materials, delete_group_materials
 from table import Table
 
 
-class KardAg(BaseFrame, Frame):
+
+class GroupMaterials(BaseFrame, Frame):
     def __init__(self, master=None, **kwargs):
         Frame.__init__(self, master, **kwargs)
         self.master = master
         self.table = None
 
-        master.title("Kartoteka kontrahentow")
+        master.title("Grupy materiaowe")
         master.geometry("850x650+300+200")
         self.init_table()
 
     def init_table(self):
-        self.table = Table(self.master, ["ID", "Nazwa Kontrahenta", "Adres kontrahenta", "Symbol Kontahenta"],
-                           column_minwidths=[None, None, None, None])
+        self.table = Table(self.master, ["ID", "Nazwa Grupy", "Symbol"], column_minwidths=[None, None, None])
         self.table.pack(fill=X, padx=10, pady=10)
-        rows = get_kartoteka_agent()
+        rows = get_group_materials()
         result = []
         for row in rows:
             result.append(row)
@@ -54,8 +51,7 @@ class KardAg(BaseFrame, Frame):
             s += ' '.join(lst) + ' '
         print(s)
         first_row = data[-1]
-        insert_data_agent(ID=first_row[0], Nazwa_kontrahenta=first_row[1], Adres_kontrahenta=first_row[2],
-                          Symbol_kontrahenta=first_row[3])
+        insert_group_materials(ID=first_row[0], Nazwa_grupy=first_row[1], Symbol=first_row[2])
 
     def delete_row(self):
         row_id = self.row_id_input.get()
@@ -73,4 +69,4 @@ class KardAg(BaseFrame, Frame):
             return
 
         self.table.delete_row(index)
-        delete_data_agent(row_id)
+        delete_group_materials(row_id)

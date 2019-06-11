@@ -1,7 +1,7 @@
 from tkinter import Frame, Button, Label, Entry, messagebox, ttk
 from tkinter.constants import *
 from base_frame import BaseFrame
-from conect import insert_data_index, select_units
+from conect import insert_data_index, select_units, select_materials
 from conect import get_kartoteka_index
 from conect import delete_data_index
 from table import Table
@@ -23,8 +23,9 @@ class IndexMat(BaseFrame, Frame):
 
     def init_table(self):
         units = self.get_units()
-        self.table = Table(self.master, self._columns, combobox_column=2, combobox_column_data=units,
-                           column_minwidths=[None, None, None, None, None])
+        materials = self.get_group_materials()
+        comboboxes = {'2': units, '3': materials}
+        self.table = Table(self.master, self._columns, comboboxes=comboboxes)
         self.table.pack(fill=X, padx=10, pady=10)
         rows = get_kartoteka_index()
         results = []
@@ -42,6 +43,14 @@ class IndexMat(BaseFrame, Frame):
         for row in rows:
             available_units.append(row[0])
         return available_units
+
+    @staticmethod
+    def get_group_materials():
+        available_materials = []
+        rows = select_materials()
+        for row in rows:
+            available_materials.append(row[0])
+        return available_materials
 
     def init_btns(self):
         row_id_input_label = Label(self, text='Put your id: ')

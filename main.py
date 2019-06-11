@@ -1,10 +1,10 @@
 import tkinter as tk
 from tkinter.ttk import Style
-
 from tkinter import ttk
 import config
 from base_frame import BaseFrame
 from login import LoginFrame
+from tkcalendar import DateEntry
 
 
 class AppFrame(tk.Tk):
@@ -33,7 +33,12 @@ class MainFrame(BaseFrame, ttk.Frame):
         ttk.Frame.__init__(self, master, **kwargs)
         master.title(config.APP_TITLE)
         master.geometry("850x650+300+200")
-        # master.geometry("{0}x{1}+0+0".format(master.winfo_screenwidth(), master.winfo_screenheight()))
+        cal = DateEntry(self, width=12, background='darkblue',
+                        foreground='white', borderwidth=2, year=2019)
+        cal.pack(padx=10, pady=10)
+        text = tk.Label(self, text="Application for Manager your Storage!", fg="darkblue",
+                        font="Helvetica 16 bold italic")
+        text.pack()
         self.init_ui()
 
 
