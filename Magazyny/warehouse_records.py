@@ -15,7 +15,7 @@ class Warehouse_Rec(BaseFrame, Frame):
     def __init__(self, master=None, **kwargs):
         Frame.__init__(self, master, **kwargs)
 
-        self._columns = ["Index", "Nazwa","Jednostka miary",  "Ilosc", "Cena", "Wartosc", "Grupa materialowa"]
+        self._columns = ["Index", "Nazwa", "Jednostka miary",  "Ilosc", "Cena", "Wartosc", "Grupa materialowa"]
 
         self.master = master
         self.table = None
@@ -35,8 +35,8 @@ class Warehouse_Rec(BaseFrame, Frame):
         miara_for_storage = self.get_unit_devision()
         materials = self.get_group_materials()
         comboboxes = {'2': miara_for_storage, '6': materials}
-        self.table = Table(self.master, self._columns, comboboxes=comboboxes,
-                           column_minwidths=[None, None, None, None, None, None, None])
+        self.table = Table(self.master, self._columns, comboboxes=comboboxes)
+                           # column_minwidths=[None, None, None, None, None, None, None])
         self.table.pack(fill=X, padx=10, pady=10)
         rows = get_bilance_otwarcia()
         results = []

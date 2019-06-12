@@ -27,8 +27,7 @@ class Storage(BaseFrame, Frame):
     def init_table(self):
         units = self.get_units()
         comboboxes = {'6': units}
-        self.table = Table(self.master, self._columns, comboboxes=comboboxes,
-                           column_minwidths=[None, None, None, None, None, None, None, None])
+        self.table = Table(self.master, self._columns, comboboxes=comboboxes)
         self.table.pack(fill=X, padx=10, pady=10)
         rows = get_storage()
         results = []
@@ -73,11 +72,11 @@ class Storage(BaseFrame, Frame):
             s += ' '.join(lst) + ' '
         print(s)
         first_row = data[-1]
-        insert_data_storage(ID=first_row[0], Symbol_magazynu=first_row[1], Nazwa_magazynu=first_row[2],
-                            Data_Otwarcia=first_row[3],
-                            Status_inwentaryzacji=first_row[4],
-                            Data_inwentaryzacji=first_row[5],
-                            Symbol_placowki=first_row[6], ID_Dokumentu=first_row[7])
+        insert_data_storage(id=first_row[0], symbol_magazynu=first_row[1], nazwa_magazynu=first_row[2],
+                            data_otwarcia=first_row[3],
+                            status_inwentaryzacji=first_row[4],
+                            data_inwentaryzacji=first_row[5],
+                            symbol_placowki=first_row[6], id_dokumentu=first_row[7])
 
     def delete_row(self):
         row_id = self.row_id_input.get()

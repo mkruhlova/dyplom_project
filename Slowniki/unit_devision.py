@@ -18,8 +18,7 @@ class UnitDev(BaseFrame, Frame):
         self.init_table()
 
     def init_table(self):
-        self.table = Table(self.master, ["ID", "Nazwa jednostki", "Symbol jednostki"],
-                           column_minwidths=[None, None, None])
+        self.table = Table(self.master, ["ID", "Nazwa jednostki", "Symbol jednostki"])
         self.table.pack(fill=X, padx=10, pady=10)
         rows = get_kartoteka_unit()
         result = []
@@ -53,7 +52,7 @@ class UnitDev(BaseFrame, Frame):
             s += ' '.join(lst) + ' '
         print(s)
         first_row = data[-1]
-        insert_data_unit(ID=first_row[0], Nazwa_jednostki=first_row[1], Symbol=first_row[2])
+        insert_data_unit(id=first_row[0], nazwa_jednostki=first_row[1], symbol=first_row[2])
 
     def delete_row(self):
         row_id = self.row_id_input.get()

@@ -23,9 +23,9 @@ def get_kartoteka(cur):
 
 
 @create_cursor
-def insert_data(cur, ID, Nazwa_jednostki, Symbol):
+def insert_data(cur, id, nazwa_jednostki, symbol):
     s = "INSERT INTO `slownik jednostki firmy`(`ID`,`Nazwa_jednostki`,`Symbol`) " \
-        "VALUES ('{}','{}','{}')".format(ID, Nazwa_jednostki, Symbol)
+        "VALUES ('{}','{}','{}')".format(id, nazwa_jednostki, symbol)
 
     cur.execute(s)
 
@@ -37,9 +37,9 @@ def delete_data(cur, index):
 
 
 @create_cursor
-def insert_data_unit(cur, ID, Nazwa_jednostki, Symbol):
+def insert_data_unit(cur, id, nazwa_jednostki, symbol):
     s = "INSERT INTO `slownik jednostek miar`(`ID`,`Nazwa_jednostki`,`Symbol`) " \
-        "VALUES ('{}','{}','{}')".format(ID, Nazwa_jednostki, Symbol)
+        "VALUES ('{}','{}','{}')".format(id, nazwa_jednostki, symbol)
 
     cur.execute(s)
 
@@ -65,9 +65,9 @@ def get_kartoteka_index(cur):
 
 
 @create_cursor
-def insert_data_index(cur, id, Nazwa_materialu, Jednostka_miary, Grupa_materialowa, Symbol):
+def insert_data_index(cur, id, nazwa_materialu, jednostka_miary, grupa_materialowa, symbol):
     s = "INSERT INTO `kartoteka indeksow materialowych`(`ID`,`Nazwa_materialu`,`Jednostka_miary`,`Grupa_materialowa`, `Symbol`) VALUES ('{}','{}','{}','{}','{}')".format(
-        id, Nazwa_materialu, Jednostka_miary, Grupa_materialowa, Symbol)
+        id, nazwa_materialu, jednostka_miary, grupa_materialowa, symbol)
     cur.execute(s)
 
 
@@ -105,10 +105,10 @@ def select_agent(cur):
 
 
 @create_cursor
-def insert_data_agent(cur, ID, Nazwa_kontrahenta, Adres_kontrahenta, Symbol_kontrahenta):
+def insert_data_agent(cur, id, nazwa_kontrahenta, adres_kontrahenta, symbol_kontrahenta):
     s = "INSERT INTO `kartoteka kontrahentow`(`ID`,`Nazwa_kontrahenta`,`Adres_kontrahenta`,`Symbol_kontrahenta`) " \
         "VALUES ('{}','{}','{}','{}')".format(
-        ID, Nazwa_kontrahenta, Adres_kontrahenta, Symbol_kontrahenta)
+        id, nazwa_kontrahenta, adres_kontrahenta, symbol_kontrahenta)
     cur.execute(s)
 
 
@@ -141,19 +141,19 @@ def get_storage(cur):
 
 
 @create_cursor
-def insert_data_storage(cur, ID, Symbol_magazynu, Nazwa_magazynu, Data_Otwarcia,
-                        Status_inwentaryzacji, Data_inwentaryzacji,
-                        Symbol_placowki, ID_Dokumentu):
+def insert_data_storage(cur, id, symbol_magazynu, nazwa_magazynu, data_otwarcia,
+                        status_inwentaryzacji, data_inwentaryzacji,
+                        symbol_placowki, id_dokumentu):
     s = "INSERT INTO `slownik magazynow`(`ID`,`Symbol_magazynu`, `Nazwa_magazynu`, `Data_otwarcia`," \
         "`Status_inwentarizacji`, `Data_inwentarizacji`," \
         "`Symbol_placowki`,`ID_Dokumentu`)" \
-        "VALUES ('{}','{}','{}','{}','{}','{}','{}','{}')".format(ID, Symbol_magazynu,
-                                                                  Nazwa_magazynu,
-                                                                  Data_Otwarcia,
-                                                                  Status_inwentaryzacji,
-                                                                  Data_inwentaryzacji,
-                                                                  Symbol_placowki,
-                                                                  ID_Dokumentu)
+        "VALUES ('{}','{}','{}','{}','{}','{}','{}','{}')".format(id, symbol_magazynu,
+                                                                  nazwa_magazynu,
+                                                                  data_otwarcia,
+                                                                  status_inwentaryzacji,
+                                                                  data_inwentaryzacji,
+                                                                  symbol_placowki,
+                                                                  id_dokumentu)
     cur.execute(s)
 
 
@@ -186,9 +186,9 @@ def delete_doc(cur, index):
 
 
 @create_cursor
-def insert_doc_unit(cur, Nr_Dok, Data_Dok, Data_Ksiegowania, Wartosc, Ilosc):
+def insert_doc_unit(cur, nr_dok, data_dok, data_ksiegowania, wartosc, ilosc):
     s = "INSERT INTO `slownik_dokumentow_magazynowych`(`Nr_Dok`, `Data_Dok`, `Data_Ksiegowania`, `Wartosc`, `Ilosc`) " \
-        "VALUES ('{}','{}','{}','{}','{}')".format(Nr_Dok, Data_Dok, Data_Ksiegowania, Wartosc, Ilosc)
+        "VALUES ('{}','{}','{}','{}','{}')".format(nr_dok, data_dok, data_ksiegowania, wartosc, ilosc)
 
     cur.execute(s)
 
@@ -209,9 +209,9 @@ def get_income_docs_rw(cur):
 
 
 @create_cursor
-def insert_income_doc(cur, Nr_Dok, Data_Dok, Data_Ksiegowania, Wartosc, Ilosc):
+def insert_income_doc(cur, nr_dok, data_dok, data_ksiegowania, wartosc, ilosc):
     s = "INSERT INTO `slownik_dokumentow_magazynowych`(`Nr_Dok`, `Data_Dok`, `Data_Ksiegowania`, `Wartosc`, `Ilosc`) " \
-        "VALUES ('{}','{}','{}','{}','{}')".format(Nr_Dok, Data_Dok, Data_Ksiegowania, Wartosc, Ilosc)
+        "VALUES ('{}','{}','{}','{}','{}')".format(nr_dok, data_dok, data_ksiegowania, wartosc, ilosc)
 
     cur.execute(s)
 
@@ -271,9 +271,9 @@ def delete_data_bilans(cur, index):
 
 
 @create_cursor
-def insert_data_bilans(cur, index, lp, nazwa, Jednostka_miary, Ilosc, Cena, Wartosc):
+def insert_data_bilans(cur, index, lp, nazwa, jednostka_miary, ilosc, cena, wartosc):
     s = "INSERT INTO `bilans_otwarcia`(`Index`, `Lp`, `Nazwa`, `Jednostka_miary`, `Ilosc`,`Cena`,`Wartosc`) " \
-        "VALUES ('{}','{}','{}','{}','{}','{}','{}')".format(index, lp, nazwa, Jednostka_miary, Ilosc, Cena, Wartosc)
+        "VALUES ('{}','{}','{}','{}','{}','{}','{}')".format(index, lp, nazwa, jednostka_miary, ilosc, cena, wartosc)
     cur.execute(s)
 
 
@@ -299,9 +299,9 @@ def get_group_materials(cur):
 
 
 @create_cursor
-def insert_group_materials(cur, ID, Nazwa_grupy, Symbol):
+def insert_group_materials(cur, id, nazwa_grupy, symbol):
     s = "INSERT INTO `słownik grup materialowych`(`ID`,`Nazwa_grupy`,`Symbol`) " \
-        "VALUES ('{}','{}','{}')".format(ID, Nazwa_grupy, Symbol)
+        "VALUES ('{}','{}','{}')".format(id, nazwa_grupy, symbol)
 
     cur.execute(s)
 

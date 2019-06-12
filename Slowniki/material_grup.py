@@ -17,7 +17,7 @@ class GroupMaterials(BaseFrame, Frame):
         self.init_table()
 
     def init_table(self):
-        self.table = Table(self.master, ["ID", "Nazwa Grupy", "Symbol"], column_minwidths=[None, None, None])
+        self.table = Table(self.master, ["ID", "Nazwa Grupy", "Symbol"],)
         self.table.pack(fill=X, padx=10, pady=10)
         rows = get_group_materials()
         result = []
@@ -51,7 +51,7 @@ class GroupMaterials(BaseFrame, Frame):
             s += ' '.join(lst) + ' '
         print(s)
         first_row = data[-1]
-        insert_group_materials(ID=first_row[0], Nazwa_grupy=first_row[1], Symbol=first_row[2])
+        insert_group_materials(id=first_row[0], nazwa_grupy=first_row[1], symbol=first_row[2])
 
     def delete_row(self):
         row_id = self.row_id_input.get()

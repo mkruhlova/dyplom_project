@@ -19,8 +19,7 @@ class KardAg(BaseFrame, Frame):
         self.init_table()
 
     def init_table(self):
-        self.table = Table(self.master, ["ID", "Nazwa Kontrahenta", "Adres kontrahenta", "Symbol Kontahenta"],
-                           column_minwidths=[None, None, None, None])
+        self.table = Table(self.master, ["ID", "Nazwa Kontrahenta", "Adres kontrahenta", "Symbol Kontahenta"])
         self.table.pack(fill=X, padx=10, pady=10)
         rows = get_kartoteka_agent()
         result = []
@@ -54,8 +53,8 @@ class KardAg(BaseFrame, Frame):
             s += ' '.join(lst) + ' '
         print(s)
         first_row = data[-1]
-        insert_data_agent(ID=first_row[0], Nazwa_kontrahenta=first_row[1], Adres_kontrahenta=first_row[2],
-                          Symbol_kontrahenta=first_row[3])
+        insert_data_agent(id=first_row[0], nazwa_kontrahenta=first_row[1], adres_kontrahenta=first_row[2],
+                          symbol_kontrahenta=first_row[3])
 
     def delete_row(self):
         row_id = self.row_id_input.get()

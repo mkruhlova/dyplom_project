@@ -39,8 +39,8 @@ class Income_docs(BaseFrame, Frame):
     def init_table(self):
         inf_about_company = self.get_inf_about_company()
         comboboxes = {'1': inf_about_company}
-        self.table = Table(self.master, self._columns, comboboxes=comboboxes,
-                           column_minwidths=[None, None, None, None, None, None])
+        self.table = Table(self.master, self._columns, comboboxes=comboboxes)
+                           # column_minwidths=[None, None, None, None, None, None])
         self.table.pack(fill=X, padx=10, pady=10)
         rows = get_income_docs_rw()
         result = []

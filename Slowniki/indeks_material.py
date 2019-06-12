@@ -11,7 +11,7 @@ class IndexMat(BaseFrame, Frame):
     def __init__(self, master=None, **kwargs):
         Frame.__init__(self, master, **kwargs)
 
-        self._columns = ["ID","Nazwa materialu", "Jednostka miary", "Grupa materialowa", "Symbol"]
+        self._columns = ["ID", "Nazwa materialu", "Jednostka miary", "Grupa materialowa", "Symbol"]
 
         self.master = master
         self.table = None
@@ -78,8 +78,8 @@ class IndexMat(BaseFrame, Frame):
             s += ' '.join(lst) + ' '
         print(s)
         first_row = data[-1]
-        insert_data_index(id=first_row[0], Nazwa_materialu=first_row[1], Jednostka_miary=first_row[2],
-                          Grupa_materialowa=first_row[3], Symbol=first_row[4])
+        insert_data_index(id=first_row[0], nazwa_materialu=first_row[1], jednostka_miary=first_row[2],
+                          grupa_materialowa=first_row[3], symbol=first_row[4])
 
     def delete_row(self):
         row_id = self.row_id_input.get()

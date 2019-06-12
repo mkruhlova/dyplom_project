@@ -80,7 +80,7 @@ class Balance_open(BaseFrame, Frame):
         print(s)
         first_row = data[-1]
         insert_data_bilans(index=first_row[0], lp=first_row[1], nazwa=first_row[2],
-                           Jednostka_miary=first_row[3], Ilosc=first_row[4], Cena=first_row[5], Wartosc=first_row[5])
+                           jednostka_miary=first_row[3], ilosc=first_row[4], cena=first_row[5], wartosc=first_row[5])
 
     def delete_row(self):
         row_id = self.row_id_input.get()
