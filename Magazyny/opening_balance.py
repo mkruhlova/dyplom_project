@@ -6,7 +6,7 @@ from conect import get_bilance_otwarcia, insert_data_bilans, delete_data_bilans,
 from table import Table
 
 
-class Balance_open(BaseFrame, Frame):
+class BalanceOpen(BaseFrame, Frame):
     def __init__(self, master=None, **kwargs):
         Frame.__init__(self, master, **kwargs)
 

@@ -9,7 +9,6 @@ class BaseFrame(tk.Frame):
 
         file_menu = tk.Menu(menu_bar)
         magMenu = tk.Menu(menu_bar)
-        # magmenu2 = tk.Menu(magMenu, tearoff=0)
         slowMenu = tk.Menu(menu_bar)
         helpMenu = tk.Menu(menu_bar)
 
@@ -25,16 +24,17 @@ class BaseFrame(tk.Frame):
 
         mags_menu_list = ['Kartoteki magazynowe', 'Bilans otwarcia']
         mags_menu_opts = {'Kartoteki magazynowe': {'command': self.warerec},
-                          'Bilans otwarcia': {'command': self.openbal},
-                          'Inwentaryzacja': {'command': self.inventory}}
+                          'Bilans otwarcia': {'command': self.openbal}
+                          }
         self.add_menu_elements(magMenu, mags_menu_list, mags_menu_opts)
 
         menu_bar.add_cascade(label="Slowniki", underline=0, menu=slowMenu)
-        slow_menu = ['Indeksy materialowe', 'Kartoteka kontrahentow', 'Grupy materialowe','Jednostki firmy', 'Jednostki miary', 'Magazyny']
+        slow_menu = ['Indeksy materialowe', 'Kartoteka kontrahentow', 'Grupy materialowe', 'Jednostki firmy',
+                     'Jednostki miary', 'Magazyny']
         slow_menu_opts = {'Indeksy materialowe': {'command': self.ind_mat},
                           'Kartoteka kontrahentow': {'command': self.kardfile},
                           'Placowki': {'command': self.compdevision},
-                          'Grupy materialowe':{'command':self.groupmaterials},
+                          'Grupy materialowe': {'command': self.groupmaterials},
                           'Jednostki miary': {'command': self.unitdevision},
                           'Jednostki firmy': {'command': self.compdevision},
                           'Magazyny': {'command': self.storage}}
@@ -49,74 +49,79 @@ class BaseFrame(tk.Frame):
         file_menu.add_command(label="Wyjscie", underline=0, command=self.on_exit)
 
     def on_exit(self):
-        self.quit()  # wyjscie
+        self.quit()
 
     def ab_program(self):
-        from Pomoc.about_prog import AbProgFrame  # TODO
+        from Pomoc.about_prog import AboutProg
 
-        self.master.change(AbProgFrame)  # help
+        self.master.change(AboutProg)
 
     def instr(self):
-        self.master.change(InstructProg)  # help
+        from Pomoc.instruction import InstructProg
+
+        self.master.change(InstructProg)
 
     def ind_mat(self):
-        self.master.change(IndexMat)  # slowniki
+        from Slowniki.indeks_material import IndexMat
+
+        self.master.change(IndexMat)
 
     def kardfile(self):
-        self.master.change(KardAg)  # slowniki
+        from Slowniki.kard_agent import KardAg
+
+        self.master.change(KardAg)
 
     def compdevision(self):
-        self.master.change(CompDev)  # slowniki
+        from Slowniki.company_devision import CompDev
+
+        self.master.change(CompDev)
 
     def unitdevision(self):
-        self.master.change(UnitDev)  # slowniki
+        from Slowniki.unit_devision import UnitDev
+
+        self.master.change(UnitDev)
 
     def groupmaterials(self):
-        self.master.change(GroupMaterials)  # slowniki
+        from Slowniki.material_grup import GroupMaterials
 
+        self.master.change(GroupMaterials)
 
     def storage(self):
-        self.master.change(Storage)  # slowniki
+        from Slowniki.storage import Storage
+
+        self.master.change(Storage)
 
     def storagedocs(self):
-        self.master.change(DocsStore)  # slowniki
+        from Slowniki.docsstore import DocsStore
+
+        self.master.change(DocsStore)
 
     def warerec(self):
-        self.master.change(Warehouse_Rec)  # magazyny
+        from Magazyny.warehouse_records import WarehouseRec
+
+        self.master.change(WarehouseRec)
 
     def openbal(self):
-        self.master.change(Balance_open)  # magazyny
+        from Magazyny.opening_balance import BalanceOpen
 
-    def inventory(self):
-        self.master.change(Inventory_store)  # magazyny
+        self.master.change(BalanceOpen)
 
     def income_docs(self):
-        self.master.change(Income_docs)
+        from Dokumenty.income_documents import IncomeDocs
+
+        self.master.change(IncomeDocs)
 
     def expence_docs(self):
-        self.master.change(Expence_docs)
+        from Dokumenty.expence_documents import ExpenceDocs
+
+        self.master.change(ExpenceDocs)
 
     def close_period(self):
-        self.master.change(Period_close)
+        from Dokumenty.period_close import PeriodClose
+        self.master.change(PeriodClose)
 
     @classmethod
     def add_menu_elements(cls, menu, elements, opts=None):
         opts = opts or {}
         for el in elements:
             menu.add_cascade(label=el, **opts.get(el, {}))
-
-
-from Pomoc.instruction import InstructProg
-from Slowniki.indeks_material import IndexMat
-from Slowniki.kard_agent import KardAg
-from Slowniki.company_devision import CompDev
-from Slowniki.unit_devision import UnitDev
-from Slowniki.storage import Storage
-from Slowniki.docsstore import DocsStore
-from Slowniki.material_grup import GroupMaterials
-from Magazyny.warehouse_records import Warehouse_Rec
-from Magazyny.opening_balance import Balance_open
-from Magazyny.inventory import Inventory_store
-from Dokumenty.income_documents import Income_docs
-from Dokumenty.expence_documents import Expence_docs
-from Dokumenty.period_close import Period_close

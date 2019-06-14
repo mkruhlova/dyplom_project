@@ -5,7 +5,6 @@ from conect import get_group_materials, insert_group_materials, delete_group_mat
 from table import Table
 
 
-
 class GroupMaterials(BaseFrame, Frame):
     def __init__(self, master=None, **kwargs):
         Frame.__init__(self, master, **kwargs)
@@ -17,7 +16,7 @@ class GroupMaterials(BaseFrame, Frame):
         self.init_table()
 
     def init_table(self):
-        self.table = Table(self.master, ["ID", "Nazwa Grupy", "Symbol"],)
+        self.table = Table(self.master, ["ID", "Nazwa Grupy", "Symbol"], )
         self.table.pack(fill=X, padx=10, pady=10)
         rows = get_group_materials()
         result = []

@@ -7,15 +7,15 @@ from tkcalendar import DateEntry
 
 from base_frame import BaseFrame
 from conect import delete_income_doc, get_kartoteka_unit_for_storage, get_storage_records, select_warehouse_records, \
-    insert_income_doc, get_bilance_otwarcia, select_materials
+    insert_warehouse_records, get_bilance_otwarcia, select_materials
 from table import Table
 
 
-class Warehouse_Rec(BaseFrame, Frame):
+class WarehouseRec(BaseFrame, Frame):
     def __init__(self, master=None, **kwargs):
         Frame.__init__(self, master, **kwargs)
 
-        self._columns = ["Index", "Nazwa", "Jednostka miary",  "Ilosc", "Cena", "Wartosc", "Grupa materialowa"]
+        self._columns = ["Index", "Nazwa", "Jednostka miary", "Ilosc", "Cena", "Wartosc", "Grupa materialowa"]
 
         self.master = master
         self.table = None
@@ -23,7 +23,7 @@ class Warehouse_Rec(BaseFrame, Frame):
 
         ttk.Label(self, text='Choose date').pack(padx=10, pady=10)
 
-        cal = DateEntry(self, width=12, background='darkblue',
+        cal = DateEntry(self, width=12, background='darkblue', locale='pl',
                         foreground='white', borderwidth=2, year=2019)
         cal.pack(padx=10, pady=10)
 
@@ -36,13 +36,12 @@ class Warehouse_Rec(BaseFrame, Frame):
         materials = self.get_group_materials()
         comboboxes = {'2': miara_for_storage, '6': materials}
         self.table = Table(self.master, self._columns, comboboxes=comboboxes)
-                           # column_minwidths=[None, None, None, None, None, None, None])
         self.table.pack(fill=X, padx=10, pady=10)
         rows = get_bilance_otwarcia()
         results = []
         for row in rows:
             row = list(row)
-            row = [row[0]]+ row[2:]
+            row = [row[0]] + row[2:]
             results.append(row)
         if results:
             self.table.set_data(results)
@@ -96,11 +95,11 @@ class Warehouse_Rec(BaseFrame, Frame):
             s += ' '.join(lst) + ' '
         print(s)
         first_row = data[-1]
-        insert_income_doc(ID=first_row[0], Symbol_magazynu=first_row[1], Nazwa_magazynu=first_row[2],
-                          Data_Otwarcia=first_row[3],
-                          Status_inwentaryzacji=first_row[4],
-                          Data_inwentaryzacji=first_row[5],
-                          Symbol_placowki=first_row[6], ID_Dokumentu=first_row[7])
+        insert_warehouse_records(Index=first_row[0], Nazwa=first_row[1], Jednostka_miary=first_row[2],
+                                 Ilosc=first_row[3],
+                                 Cena=first_row[4],
+                                 Wartosc=first_row[5],
+                                 Grupa_materialowa=first_row[6])
 
     def delete_row(self):
         row_id = self.row_id_input.get()

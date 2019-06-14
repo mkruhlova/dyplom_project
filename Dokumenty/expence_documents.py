@@ -10,7 +10,7 @@ from conect import delete_doc, get_docs_pz, get_storage_names, select_agent, ins
 from table import Table
 
 
-class Expence_docs(BaseFrame, Frame):
+class ExpenceDocs(BaseFrame, Frame):
     def __init__(self, master=None, **kwargs):
         Frame.__init__(self, master, **kwargs)
 
@@ -29,7 +29,7 @@ class Expence_docs(BaseFrame, Frame):
 
         ttk.Label(self, text='Choose date').pack(padx=10, pady=10)
 
-        cal = DateEntry(self, width=12, background='darkblue',
+        cal = DateEntry(self, width=12, background='darkblue',locale='pl',
                         foreground='white', borderwidth=2, year=2019)
         cal.pack(padx=10, pady=10)
 
@@ -91,11 +91,8 @@ class Expence_docs(BaseFrame, Frame):
             s += ' '.join(lst) + ' '
         print(s)
         first_row = data[-1]
-        insert_doc_unit(ID=first_row[0], Symbol_magazynu=first_row[1], Nazwa_magazynu=first_row[2],
-                        Data_Otwarcia=first_row[3],
-                        Status_inwentaryzacji=first_row[4],
-                        Data_inwentaryzacji=first_row[5],
-                        Symbol_placowki=first_row[6], ID_Dokumentu=first_row[7])
+        insert_doc_unit(nr_dok=first_row[0], kontrahent=first_row[1], data_dok=first_row[2], data_ksiegowania=[3],
+                        wartosc=first_row[4], ilosc=first_row[5])
 
     def delete_row(self):
         row_id = self.row_id_input.get()

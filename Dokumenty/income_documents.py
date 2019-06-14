@@ -9,7 +9,7 @@ from conect import insert_income_doc, get_income_docs_rw, delete_income_doc, get
 from table import Table
 
 
-class Income_docs(BaseFrame, Frame):
+class IncomeDocs(BaseFrame, Frame):
     def __init__(self, master=None, **kwargs):
         Frame.__init__(self, master, **kwargs)
 
@@ -40,7 +40,6 @@ class Income_docs(BaseFrame, Frame):
         inf_about_company = self.get_inf_about_company()
         comboboxes = {'1': inf_about_company}
         self.table = Table(self.master, self._columns, comboboxes=comboboxes)
-                           # column_minwidths=[None, None, None, None, None, None])
         self.table.pack(fill=X, padx=10, pady=10)
         rows = get_income_docs_rw()
         result = []
@@ -90,11 +89,8 @@ class Income_docs(BaseFrame, Frame):
             s += ' '.join(lst) + ' '
         print(s)
         first_row = data[-1]
-        insert_income_doc(ID=first_row[0], Symbol_magazynu=first_row[1], Nazwa_magazynu=first_row[2],
-                          Data_Otwarcia=first_row[3],
-                          Status_inwentaryzacji=first_row[4],
-                          Data_inwentaryzacji=first_row[5],
-                          Symbol_placowki=first_row[6], ID_Dokumentu=first_row[7])
+        insert_income_doc(nr_dok=first_row[0], jednostka_firmy=first_row[1], data_dok=first_row[2],
+                          data_ksiegowania=[3], wartosc=first_row[4], ilosc=first_row[5])
 
     def delete_row(self):
         row_id = self.row_id_input.get()
