@@ -6,8 +6,15 @@ from tkinter.ttk import Entry
 from tkcalendar import DateEntry
 
 from base_frame import BaseFrame
-from conect import delete_income_doc, get_kartoteka_unit_for_storage, get_storage_records, select_warehouse_records, \
-    insert_warehouse_records, get_bilance_otwarcia, select_materials
+from conect import (
+    delete_income_doc,
+    get_kartoteka_unit_for_storage,
+    get_storage_records,
+    select_warehouse_records,
+    insert_warehouse_records,
+    get_bilance_otwarcia,
+    select_materials,
+)
 from table import Table
 
 
@@ -15,16 +22,31 @@ class WarehouseRec(BaseFrame, Frame):
     def __init__(self, master=None, **kwargs):
         Frame.__init__(self, master, **kwargs)
 
-        self._columns = ["Index", "Nazwa", "Jednostka miary", "Ilosc", "Cena", "Wartosc", "Grupa materialowa"]
+        self._columns = [
+            "Index",
+            "Nazwa",
+            "Jednostka miary",
+            "Ilosc",
+            "Cena",
+            "Wartosc",
+            "Grupa materialowa",
+        ]
 
         self.master = master
         self.table = None
         self.row_id_input = None
 
-        ttk.Label(self, text='Choose date').pack(padx=10, pady=10)
+        ttk.Label(self, text="Choose date").pack(padx=10, pady=10)
 
-        cal = DateEntry(self, width=12, background='darkblue', locale='pl',
-                        foreground='white', borderwidth=2, year=2019)
+        cal = DateEntry(
+            self,
+            width=12,
+            background="darkblue",
+            locale="pl",
+            foreground="white",
+            borderwidth=2,
+            year=2019,
+        )
         cal.pack(padx=10, pady=10)
 
         master.title("Kartoteki magazynowe")
@@ -34,7 +56,7 @@ class WarehouseRec(BaseFrame, Frame):
     def init_table(self):
         miara_for_storage = self.get_unit_devision()
         materials = self.get_group_materials()
-        comboboxes = {'2': miara_for_storage, '6': materials}
+        comboboxes = {"2": miara_for_storage, "6": materials}
         self.table = Table(self.master, self._columns, comboboxes=comboboxes)
         self.table.pack(fill=X, padx=10, pady=10)
         rows = get_bilance_otwarcia()
@@ -46,20 +68,20 @@ class WarehouseRec(BaseFrame, Frame):
         if results:
             self.table.set_data(results)
 
-        self.row_id_input_label = Label(self, text='Put your id: ')
-        self.row_id_input_label.pack(side='left')
+        self.row_id_input_label = Label(self, text="Put your id: ")
+        self.row_id_input_label.pack(side="left")
 
         self.row_id_input = Entry(self)
-        self.row_id_input.pack(side='left')
+        self.row_id_input.pack(side="left")
 
         btn = Button(self, text="Delete row", command=self.delete_row)
-        btn.pack(side='left')
+        btn.pack(side="left")
 
         btn = Button(self, text="Add row", command=self.add_row)
-        btn.pack(side='left')
+        btn.pack(side="left")
 
         btn = Button(self, text="Save", command=self.save)
-        btn.pack(side='left')
+        btn.pack(side="left")
 
     @staticmethod
     def get_unit_devision():
@@ -90,16 +112,20 @@ class WarehouseRec(BaseFrame, Frame):
 
     def save(self):
         data = self.table.get_data()
-        s = ''
+        s = ""
         for lst in data:
-            s += ' '.join(lst) + ' '
+            s += " ".join(lst) + " "
         print(s)
         first_row = data[-1]
-        insert_warehouse_records(Index=first_row[0], Nazwa=first_row[1], Jednostka_miary=first_row[2],
-                                 Ilosc=first_row[3],
-                                 Cena=first_row[4],
-                                 Wartosc=first_row[5],
-                                 Grupa_materialowa=first_row[6])
+        insert_warehouse_records(
+            Index=first_row[0],
+            Nazwa=first_row[1],
+            Jednostka_miary=first_row[2],
+            Ilosc=first_row[3],
+            Cena=first_row[4],
+            Wartosc=first_row[5],
+            Grupa_materialowa=first_row[6],
+        )
 
     def delete_row(self):
         row_id = self.row_id_input.get()

@@ -1,7 +1,13 @@
 from tkinter import Frame, Button, Label, Entry, messagebox, ttk
 from tkinter.constants import *
 from base_frame import BaseFrame
-from conect import get_bilance_otwarcia, insert_data_bilans, delete_data_bilans, select_opening_balance, select_units
+from conect import (
+    get_bilance_otwarcia,
+    insert_data_bilans,
+    delete_data_bilans,
+    select_opening_balance,
+    select_units,
+)
 
 from table import Table
 
@@ -10,7 +16,15 @@ class BalanceOpen(BaseFrame, Frame):
     def __init__(self, master=None, **kwargs):
         Frame.__init__(self, master, **kwargs)
 
-        self._columns = ["Index", "Lp", "Nazwa", "Jednostka miary", "Ilosc", "Cena", "Wartosc"]
+        self._columns = [
+            "Index",
+            "Lp",
+            "Nazwa",
+            "Jednostka miary",
+            "Ilosc",
+            "Cena",
+            "Wartosc",
+        ]
 
         self.master = master
         self.table = None
@@ -22,11 +36,13 @@ class BalanceOpen(BaseFrame, Frame):
 
     def init_table(self):
         units = self.get_units()
-        comboboxes_data = {
-            '3': units
-        }
-        self.table = Table(self.master, self._columns, comboboxes=comboboxes_data,
-                           column_minwidths=[None, None, None, None, None, None, None])
+        comboboxes_data = {"3": units}
+        self.table = Table(
+            self.master,
+            self._columns,
+            comboboxes=comboboxes_data,
+            column_minwidths=[None, None, None, None, None, None, None],
+        )
         self.table.pack(fill=X, padx=10, pady=10)
         rows = get_bilance_otwarcia()
         results = []
@@ -54,33 +70,40 @@ class BalanceOpen(BaseFrame, Frame):
         return date_of_bilans
 
     def init_btns(self):
-        row_id_input_label = Label(self, text='Put your id: ')
-        row_id_input_label.pack(side='left')
+        row_id_input_label = Label(self, text="Put your id: ")
+        row_id_input_label.pack(side="left")
 
         self.row_id_input = Entry(self)
-        self.row_id_input.pack(side='left')
+        self.row_id_input.pack(side="left")
 
         btn = Button(self, text="Delete row", command=self.delete_row)
-        btn.pack(side='left')
+        btn.pack(side="left")
 
         btn = Button(self, text="Add row", command=self.add_row)
-        btn.pack(side='left')
+        btn.pack(side="left")
 
         btn = Button(self, text="Save", command=self.save)
-        btn.pack(side='left')
+        btn.pack(side="left")
 
     def add_row(self):
         self.table.append_n_rows(1)
 
     def save(self):
         data = self.table.get_data()
-        s = ''
+        s = ""
         for lst in data:
-            s += ' '.join(lst) + ' '
+            s += " ".join(lst) + " "
         print(s)
         first_row = data[-1]
-        insert_data_bilans(index=first_row[0], lp=first_row[1], nazwa=first_row[2],
-                           jednostka_miary=first_row[3], ilosc=first_row[4], cena=first_row[5], wartosc=first_row[5])
+        insert_data_bilans(
+            index=first_row[0],
+            lp=first_row[1],
+            nazwa=first_row[2],
+            jednostka_miary=first_row[3],
+            ilosc=first_row[4],
+            cena=first_row[5],
+            wartosc=first_row[5],
+        )
 
     def delete_row(self):
         row_id = self.row_id_input.get()

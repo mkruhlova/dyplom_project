@@ -16,7 +16,7 @@ class GroupMaterials(BaseFrame, Frame):
         self.init_table()
 
     def init_table(self):
-        self.table = Table(self.master, ["ID", "Nazwa Grupy", "Symbol"], )
+        self.table = Table(self.master, ["ID", "Nazwa Grupy", "Symbol"])
         self.table.pack(fill=X, padx=10, pady=10)
         rows = get_group_materials()
         result = []
@@ -25,32 +25,34 @@ class GroupMaterials(BaseFrame, Frame):
         if result:
             self.table.set_data(result)
 
-        self.row_id_input_label = Label(self, text='Put your id: ')
-        self.row_id_input_label.pack(side='left')
+        self.row_id_input_label = Label(self, text="Put your id: ")
+        self.row_id_input_label.pack(side="left")
 
         self.row_id_input = Entry(self)
-        self.row_id_input.pack(side='left')
+        self.row_id_input.pack(side="left")
 
         btn = Button(self, text="Delete row", command=self.delete_row)
-        btn.pack(side='left')
+        btn.pack(side="left")
 
         btn = Button(self, text="Add row", command=self.add_row)
-        btn.pack(side='left')
+        btn.pack(side="left")
 
         btn = Button(self, text="Save", command=self.save)
-        btn.pack(side='left')
+        btn.pack(side="left")
 
     def add_row(self):
         self.table.append_n_rows(1)
 
     def save(self):
         data = self.table.get_data()
-        s = ''
+        s = ""
         for lst in data:
-            s += ' '.join(lst) + ' '
+            s += " ".join(lst) + " "
         print(s)
         first_row = data[-1]
-        insert_group_materials(id=first_row[0], nazwa_grupy=first_row[1], symbol=first_row[2])
+        insert_group_materials(
+            id=first_row[0], nazwa_grupy=first_row[1], symbol=first_row[2]
+        )
 
     def delete_row(self):
         row_id = self.row_id_input.get()

@@ -19,7 +19,10 @@ class KardAg(BaseFrame, Frame):
         self.init_table()
 
     def init_table(self):
-        self.table = Table(self.master, ["ID", "Nazwa Kontrahenta", "Adres kontrahenta", "Symbol Kontahenta"])
+        self.table = Table(
+            self.master,
+            ["ID", "Nazwa Kontrahenta", "Adres kontrahenta", "Symbol Kontahenta"],
+        )
         self.table.pack(fill=X, padx=10, pady=10)
         rows = get_kartoteka_agent()
         result = []
@@ -28,33 +31,37 @@ class KardAg(BaseFrame, Frame):
         if result:
             self.table.set_data(result)
 
-        self.row_id_input_label = Label(self, text='Put your id: ')
-        self.row_id_input_label.pack(side='left')
+        self.row_id_input_label = Label(self, text="Put your id: ")
+        self.row_id_input_label.pack(side="left")
 
         self.row_id_input = Entry(self)
-        self.row_id_input.pack(side='left')
+        self.row_id_input.pack(side="left")
 
         btn = Button(self, text="Delete row", command=self.delete_row)
-        btn.pack(side='left')
+        btn.pack(side="left")
 
         btn = Button(self, text="Add row", command=self.add_row)
-        btn.pack(side='left')
+        btn.pack(side="left")
 
         btn = Button(self, text="Save", command=self.save)
-        btn.pack(side='left')
+        btn.pack(side="left")
 
     def add_row(self):
         self.table.append_n_rows(1)
 
     def save(self):
         data = self.table.get_data()
-        s = ''
+        s = ""
         for lst in data:
-            s += ' '.join(lst) + ' '
+            s += " ".join(lst) + " "
         print(s)
         first_row = data[-1]
-        insert_data_agent(id=first_row[0], nazwa_kontrahenta=first_row[1], adres_kontrahenta=first_row[2],
-                          symbol_kontrahenta=first_row[3])
+        insert_data_agent(
+            id=first_row[0],
+            nazwa_kontrahenta=first_row[1],
+            adres_kontrahenta=first_row[2],
+            symbol_kontrahenta=first_row[3],
+        )
 
     def delete_row(self):
         row_id = self.row_id_input.get()

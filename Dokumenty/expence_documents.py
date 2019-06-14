@@ -6,7 +6,13 @@ from tkinter.ttk import Entry
 from tkcalendar import DateEntry
 
 from base_frame import BaseFrame
-from conect import delete_doc, get_docs_pz, get_storage_names, select_agent, insert_doc_unit
+from conect import (
+    delete_doc,
+    get_docs_pz,
+    get_storage_names,
+    select_agent,
+    insert_doc_unit,
+)
 from table import Table
 
 
@@ -14,7 +20,14 @@ class ExpenceDocs(BaseFrame, Frame):
     def __init__(self, master=None, **kwargs):
         Frame.__init__(self, master, **kwargs)
 
-        self._columns = ["Nr Dok", "Kontrahent", "Data Dok", "Data Ksiegowania", "Wartosc", "Ilosc"]
+        self._columns = [
+            "Nr Dok",
+            "Kontrahent",
+            "Data Dok",
+            "Data Ksiegowania",
+            "Wartosc",
+            "Ilosc",
+        ]
 
         self.master = master
         self.table = None
@@ -27,10 +40,17 @@ class ExpenceDocs(BaseFrame, Frame):
         self.combo1 = ttk.Combobox(self, values=storage_names)
         self.combo1.pack()
 
-        ttk.Label(self, text='Choose date').pack(padx=10, pady=10)
+        ttk.Label(self, text="Choose date").pack(padx=10, pady=10)
 
-        cal = DateEntry(self, width=12, background='darkblue',locale='pl',
-                        foreground='white', borderwidth=2, year=2019)
+        cal = DateEntry(
+            self,
+            width=12,
+            background="darkblue",
+            locale="pl",
+            foreground="white",
+            borderwidth=2,
+            year=2019,
+        )
         cal.pack(padx=10, pady=10)
 
         master.title("Dokumenty Przychodowe")
@@ -40,7 +60,7 @@ class ExpenceDocs(BaseFrame, Frame):
     def init_table(self):
 
         inf_about_kontrahent = self.get_inf_about_kontrahent()
-        comboboxes = {'1': inf_about_kontrahent}
+        comboboxes = {"1": inf_about_kontrahent}
         self.table = Table(self.master, self._columns, comboboxes=comboboxes)
         self.table.pack(fill=X, padx=10, pady=10)
         rows = get_docs_pz()
@@ -50,20 +70,20 @@ class ExpenceDocs(BaseFrame, Frame):
         if result:
             self.table.set_data(result)
 
-        self.row_id_input_label = Label(self, text='Put your id: ')
-        self.row_id_input_label.pack(side='left')
+        self.row_id_input_label = Label(self, text="Put your id: ")
+        self.row_id_input_label.pack(side="left")
 
         self.row_id_input = Entry(self)
-        self.row_id_input.pack(side='left')
+        self.row_id_input.pack(side="left")
 
         btn = Button(self, text="Delete row", command=self.delete_row)
-        btn.pack(side='left')
+        btn.pack(side="left")
 
         btn = Button(self, text="Add row", command=self.add_row)
-        btn.pack(side='left')
+        btn.pack(side="left")
 
         btn = Button(self, text="Save", command=self.save)
-        btn.pack(side='left')
+        btn.pack(side="left")
 
     @staticmethod
     def get_inf_about_kontrahent():
@@ -86,13 +106,19 @@ class ExpenceDocs(BaseFrame, Frame):
 
     def save(self):
         data = self.table.get_data()
-        s = ''
+        s = ""
         for lst in data:
-            s += ' '.join(lst) + ' '
+            s += " ".join(lst) + " "
         print(s)
         first_row = data[-1]
-        insert_doc_unit(nr_dok=first_row[0], kontrahent=first_row[1], data_dok=first_row[2], data_ksiegowania=[3],
-                        wartosc=first_row[4], ilosc=first_row[5])
+        insert_doc_unit(
+            nr_dok=first_row[0],
+            kontrahent=first_row[1],
+            data_dok=first_row[2],
+            data_ksiegowania=[3],
+            wartosc=first_row[4],
+            ilosc=first_row[5],
+        )
 
     def delete_row(self):
         row_id = self.row_id_input.get()

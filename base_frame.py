@@ -2,7 +2,6 @@ import tkinter as tk
 
 
 class BaseFrame(tk.Frame):
-
     def init_ui(self):
         menu_bar = tk.Menu(self.master)
         self.master.config(menu=menu_bar)
@@ -13,36 +12,53 @@ class BaseFrame(tk.Frame):
         helpMenu = tk.Menu(menu_bar)
 
         menu_bar.add_cascade(label="Dokumenty", underline=0, menu=file_menu)
-        files_menu_list = ['Dokumenty Przychodowe', 'Dokumenty Rozchodowe',
-                           'Zamkniecie miesiaca']
-        files_menu_opts = {'Dokumenty Przychodowe': {'command': self.expence_docs},
-                           'Dokumenty Rozchodowe': {'command': self.income_docs},
-                           'Zamkniecie miesiaca': {'command': self.close_period}}
+        files_menu_list = [
+            "Dokumenty Przychodowe",
+            "Dokumenty Rozchodowe",
+            "Zamkniecie miesiaca",
+        ]
+        files_menu_opts = {
+            "Dokumenty Przychodowe": {"command": self.expence_docs},
+            "Dokumenty Rozchodowe": {"command": self.income_docs},
+            "Zamkniecie miesiaca": {"command": self.close_period},
+        }
         self.add_menu_elements(file_menu, files_menu_list, files_menu_opts)
 
         menu_bar.add_cascade(label="Magazyny", underline=0, menu=magMenu)
 
-        mags_menu_list = ['Kartoteki magazynowe', 'Bilans otwarcia']
-        mags_menu_opts = {'Kartoteki magazynowe': {'command': self.warerec},
-                          'Bilans otwarcia': {'command': self.openbal}
-                          }
+        mags_menu_list = ["Kartoteki magazynowe", "Bilans otwarcia"]
+        mags_menu_opts = {
+            "Kartoteki magazynowe": {"command": self.warerec},
+            "Bilans otwarcia": {"command": self.openbal},
+        }
         self.add_menu_elements(magMenu, mags_menu_list, mags_menu_opts)
 
         menu_bar.add_cascade(label="Slowniki", underline=0, menu=slowMenu)
-        slow_menu = ['Indeksy materialowe', 'Kartoteka kontrahentow', 'Grupy materialowe', 'Jednostki firmy',
-                     'Jednostki miary', 'Magazyny']
-        slow_menu_opts = {'Indeksy materialowe': {'command': self.ind_mat},
-                          'Kartoteka kontrahentow': {'command': self.kardfile},
-                          'Placowki': {'command': self.compdevision},
-                          'Grupy materialowe': {'command': self.groupmaterials},
-                          'Jednostki miary': {'command': self.unitdevision},
-                          'Jednostki firmy': {'command': self.compdevision},
-                          'Magazyny': {'command': self.storage}}
+        slow_menu = [
+            "Indeksy materialowe",
+            "Kartoteka kontrahentow",
+            "Grupy materialowe",
+            "Jednostki firmy",
+            "Jednostki miary",
+            "Magazyny",
+        ]
+        slow_menu_opts = {
+            "Indeksy materialowe": {"command": self.ind_mat},
+            "Kartoteka kontrahentow": {"command": self.kardfile},
+            "Placowki": {"command": self.compdevision},
+            "Grupy materialowe": {"command": self.groupmaterials},
+            "Jednostki miary": {"command": self.unitdevision},
+            "Jednostki firmy": {"command": self.compdevision},
+            "Magazyny": {"command": self.storage},
+        }
         self.add_menu_elements(slowMenu, slow_menu, slow_menu_opts)
 
         menu_bar.add_cascade(label="Pomoc", underline=0, menu=helpMenu)
-        help_menu = ['O programie', 'Instrukcja obslugi']
-        help_menu_opts = {'O programie': {'command': self.ab_program}, 'Instrukcja obslugi': {'command': self.instr}}
+        help_menu = ["O programie", "Instrukcja obslugi"]
+        help_menu_opts = {
+            "O programie": {"command": self.ab_program},
+            "Instrukcja obslugi": {"command": self.instr},
+        }
         self.add_menu_elements(helpMenu, help_menu, help_menu_opts)
 
         file_menu.add_separator()
@@ -118,6 +134,7 @@ class BaseFrame(tk.Frame):
 
     def close_period(self):
         from Dokumenty.period_close import PeriodClose
+
         self.master.change(PeriodClose)
 
     @classmethod

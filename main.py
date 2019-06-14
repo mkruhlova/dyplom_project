@@ -22,7 +22,7 @@ class AppFrame(tk.Tk):
         if self.frame.__class__.__name__ == frame.__name__:
             return
         self.frame.pack_forget()
-        if hasattr(self.frame, 'table'):
+        if hasattr(self.frame, "table"):
             self.frame.table.pack_forget()
         self.frame = frame(self)
         self.frame.pack()
@@ -33,11 +33,21 @@ class MainFrame(BaseFrame, ttk.Frame):
         ttk.Frame.__init__(self, master, **kwargs)
         master.title(config.APP_TITLE)
         master.geometry("850x650+300+200")
-        cal = DateEntry(self, width=12, background='darkblue',
-                        foreground='white', borderwidth=2, year=2019)
+        cal = DateEntry(
+            self,
+            width=12,
+            background="darkblue",
+            foreground="white",
+            borderwidth=2,
+            year=2019,
+        )
         cal.pack(padx=10, pady=10)
-        text = tk.Label(self, text="Application for Manager your Storage!", fg="darkblue",
-                        font="Helvetica 16 bold italic")
+        text = tk.Label(
+            self,
+            text="Application for Manager your Storage!",
+            fg="darkblue",
+            font="Helvetica 16 bold italic",
+        )
         text.pack()
         self.init_ui()
 

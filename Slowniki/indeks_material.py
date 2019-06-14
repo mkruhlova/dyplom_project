@@ -11,7 +11,13 @@ class IndexMat(BaseFrame, Frame):
     def __init__(self, master=None, **kwargs):
         Frame.__init__(self, master, **kwargs)
 
-        self._columns = ["ID", "Nazwa materialu", "Jednostka miary", "Grupa materialowa", "Symbol"]
+        self._columns = [
+            "ID",
+            "Nazwa materialu",
+            "Jednostka miary",
+            "Grupa materialowa",
+            "Symbol",
+        ]
 
         self.master = master
         self.table = None
@@ -24,7 +30,7 @@ class IndexMat(BaseFrame, Frame):
     def init_table(self):
         units = self.get_units()
         materials = self.get_group_materials()
-        comboboxes = {'2': units, '3': materials}
+        comboboxes = {"2": units, "3": materials}
         self.table = Table(self.master, self._columns, comboboxes=comboboxes)
         self.table.pack(fill=X, padx=10, pady=10)
         rows = get_kartoteka_index()
@@ -53,33 +59,38 @@ class IndexMat(BaseFrame, Frame):
         return available_materials
 
     def init_btns(self):
-        row_id_input_label = Label(self, text='Put your id: ')
-        row_id_input_label.pack(side='left')
+        row_id_input_label = Label(self, text="Put your id: ")
+        row_id_input_label.pack(side="left")
 
         self.row_id_input = Entry(self)
-        self.row_id_input.pack(side='left')
+        self.row_id_input.pack(side="left")
 
         btn = Button(self, text="Delete row", command=self.delete_row)
-        btn.pack(side='left')
+        btn.pack(side="left")
 
         btn = Button(self, text="Add row", command=self.add_row)
-        btn.pack(side='left')
+        btn.pack(side="left")
 
         btn = Button(self, text="Save", command=self.save)
-        btn.pack(side='left')
+        btn.pack(side="left")
 
     def add_row(self):
         self.table.append_n_rows(1)
 
     def save(self):
         data = self.table.get_data()
-        s = ''
+        s = ""
         for lst in data:
-            s += ' '.join(lst) + ' '
+            s += " ".join(lst) + " "
         print(s)
         first_row = data[-1]
-        insert_data_index(id=first_row[0], nazwa_materialu=first_row[1], jednostka_miary=first_row[2],
-                          grupa_materialowa=first_row[3], symbol=first_row[4])
+        insert_data_index(
+            id=first_row[0],
+            nazwa_materialu=first_row[1],
+            jednostka_miary=first_row[2],
+            grupa_materialowa=first_row[3],
+            symbol=first_row[4],
+        )
 
     def delete_row(self):
         row_id = self.row_id_input.get()

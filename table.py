@@ -8,13 +8,37 @@ class Cell(Frame):
 
 
 class DataEntryCell(Cell):
-    def __init__(self, master, variable, anchor=W, bordercolor=None, borderwidth=1, padx=0, pady=0, background=None,
-                 foreground=None, font=None):
-        Cell.__init__(self, master, background=background, highlightbackground=bordercolor, highlightcolor=bordercolor,
-                      highlightthickness=borderwidth, bd=0)
+    def __init__(
+        self,
+        master,
+        variable,
+        anchor=W,
+        bordercolor=None,
+        borderwidth=1,
+        padx=0,
+        pady=0,
+        background=None,
+        foreground=None,
+        font=None,
+    ):
+        Cell.__init__(
+            self,
+            master,
+            background=background,
+            highlightbackground=bordercolor,
+            highlightcolor=bordercolor,
+            highlightthickness=borderwidth,
+            bd=0,
+        )
 
-        self._message_widget = Entry(self, bd=0, textvariable=variable, font=font, background=background,
-                                     foreground=foreground)
+        self._message_widget = Entry(
+            self,
+            bd=0,
+            textvariable=variable,
+            font=font,
+            background=background,
+            foreground=foreground,
+        )
         self._message_widget.pack(expand=True, padx=padx, pady=pady, anchor=anchor)
 
     #     self.bind("<Configure>", self._on_configure)
@@ -24,58 +48,118 @@ class DataEntryCell(Cell):
 
 
 class DataComboboxCell(Cell):
-    def __init__(self, master, variable, values=None, anchor=W, bordercolor=None, borderwidth=1, padx=0, pady=0,
-                 background=None,
-                 foreground=None, font=None):
-        Cell.__init__(self, master, background=background, highlightbackground=bordercolor, highlightcolor=bordercolor,
-                      highlightthickness=borderwidth, bd=0)
+    def __init__(
+        self,
+        master,
+        variable,
+        values=None,
+        anchor=W,
+        bordercolor=None,
+        borderwidth=1,
+        padx=0,
+        pady=0,
+        background=None,
+        foreground=None,
+        font=None,
+    ):
+        Cell.__init__(
+            self,
+            master,
+            background=background,
+            highlightbackground=bordercolor,
+            highlightcolor=bordercolor,
+            highlightthickness=borderwidth,
+            bd=0,
+        )
 
         values = values or []
-        self._message_widget = Combobox(self, textvariable=variable, values=values, font=font, background=background,
-                                        foreground=foreground)
+        self._message_widget = Combobox(
+            self,
+            textvariable=variable,
+            values=values,
+            font=font,
+            background=background,
+            foreground=foreground,
+        )
         self._message_widget.pack(expand=True, padx=padx, pady=pady, anchor=anchor)
 
 
 class HeaderCell(Cell):
-    def __init__(self, master, text, bordercolor=None, borderwidth=1, padx=None, pady=None, background=None,
-                 foreground=None, font=None, anchor=CENTER):
-        Cell.__init__(self, master, background=background, highlightbackground=bordercolor, highlightcolor=bordercolor,
-                      highlightthickness=borderwidth, bd=0)
-        self._header_label = Label(self, text=text, background=background, foreground=foreground, font=font)
+    def __init__(
+        self,
+        master,
+        text,
+        bordercolor=None,
+        borderwidth=1,
+        padx=None,
+        pady=None,
+        background=None,
+        foreground=None,
+        font=None,
+        anchor=CENTER,
+    ):
+        Cell.__init__(
+            self,
+            master,
+            background=background,
+            highlightbackground=bordercolor,
+            highlightcolor=bordercolor,
+            highlightthickness=borderwidth,
+            bd=0,
+        )
+        self._header_label = Label(
+            self, text=text, background=background, foreground=foreground, font=font
+        )
         self._header_label.pack(padx=padx, pady=pady, expand=True)
 
         if bordercolor is not None:
-            separator = Frame(self, height=2, background=bordercolor, bd=0, highlightthickness=0, class_="Separator")
+            separator = Frame(
+                self,
+                height=2,
+                background=bordercolor,
+                bd=0,
+                highlightthickness=0,
+                class_="Separator",
+            )
             separator.pack(fill=X, anchor=anchor)
 
 
 class Table(Frame):
-    def __init__(self,
-                 master,
-                 columns,
-                 comboboxes: Dict = None,
-                 column_weights=None,
-                 column_minwidths=None,
-                 height=None,
-                 padx=3, pady=3,
-                 cell_font=None,
-                 cell_foreground="black",
-                 cell_background="white",
-                 cell_anchor=W,
-                 header_font=None,
-                 header_background="white",
-                 header_foreground="black",
-                 header_anchor=CENTER,
-                 bordercolor="#999999",
-                 innerborder=True,
-                 outerborder=True,
-                 stripped_rows=("#EEEEEE", "white"),
-                 on_change_data=None):
+    def __init__(
+        self,
+        master,
+        columns,
+        comboboxes: Dict = None,
+        column_weights=None,
+        column_minwidths=None,
+        height=None,
+        padx=3,
+        pady=3,
+        cell_font=None,
+        cell_foreground="black",
+        cell_background="white",
+        cell_anchor=W,
+        header_font=None,
+        header_background="white",
+        header_foreground="black",
+        header_anchor=CENTER,
+        bordercolor="#999999",
+        innerborder=True,
+        outerborder=True,
+        stripped_rows=("#EEEEEE", "white"),
+        on_change_data=None,
+    ):
 
         outerborder_width = 1 if outerborder else 0
 
-        Frame.__init__(self, master, highlightbackground=bordercolor, highlightcolor=bordercolor,
-                       highlightthickness=outerborder_width, bd=0)
+        Frame.__init__(
+            self,
+            master,
+            highlightbackground=bordercolor,
+            highlightcolor=bordercolor,
+            highlightthickness=outerborder_width,
+            bd=0,
+        )
 
         self._cell_background = cell_background
         self._cell_foreground = cell_foreground
@@ -101,9 +185,18 @@ class Table(Frame):
         for j in range(len(columns)):
             column_name = columns[j]
 
-            header_cell = HeaderCell(self, text=column_name, borderwidth=self._innerborder_width, font=header_font,
-                                     background=header_background, foreground=header_foreground, padx=padx, pady=pady,
-                                     bordercolor=bordercolor, anchor=header_anchor)
+            header_cell = HeaderCell(
+                self,
+                text=column_name,
+                borderwidth=self._innerborder_width,
+                font=header_font,
+                background=header_background,
+                foreground=header_foreground,
+                padx=padx,
+                pady=pady,
+                bordercolor=bordercolor,
+                anchor=header_anchor,
+            )
             header_cell.grid(row=0, column=j, sticky=N + E + W + S)
 
         if column_weights is None:
@@ -137,18 +230,38 @@ class Table(Frame):
                 var = StringVar()
                 list_of_vars.append(var)
 
-                bg = self._stripped_rows[(i + 1) % 2] if self._stripped_rows else self._cell_background
+                bg = (
+                    self._stripped_rows[(i + 1) % 2]
+                    if self._stripped_rows
+                    else self._cell_background
+                )
                 if str(j) not in self._comboboxes.keys():
-                    cell = DataEntryCell(self, borderwidth=self._innerborder_width, variable=var,
-                                         bordercolor=self._bordercolor, padx=self._padx, pady=self._pady,
-                                         background=bg, foreground=self._cell_foreground,
-                                         font=self._cell_font, anchor=self._cell_anchor)
+                    cell = DataEntryCell(
+                        self,
+                        borderwidth=self._innerborder_width,
+                        variable=var,
+                        bordercolor=self._bordercolor,
+                        padx=self._padx,
+                        pady=self._pady,
+                        background=bg,
+                        foreground=self._cell_foreground,
+                        font=self._cell_font,
+                        anchor=self._cell_anchor,
+                    )
                 else:
-                    cell = DataComboboxCell(self, borderwidth=self._innerborder_width, variable=var,
-                                            values=self._comboboxes[str(j)],
-                                            bordercolor=self._bordercolor, padx=self._padx, pady=self._pady,
-                                            background=bg, foreground=self._cell_foreground,
-                                            font=self._cell_font, anchor=self._cell_anchor)
+                    cell = DataComboboxCell(
+                        self,
+                        borderwidth=self._innerborder_width,
+                        variable=var,
+                        values=self._comboboxes[str(j)],
+                        bordercolor=self._bordercolor,
+                        padx=self._padx,
+                        pady=self._pady,
+                        background=bg,
+                        foreground=self._cell_foreground,
+                        font=self._cell_font,
+                        anchor=self._cell_anchor,
+                    )
                 cell.grid(row=i, column=j, sticky=N + E + W + S)
 
             self._data_vars.append(list_of_vars)
@@ -181,7 +294,8 @@ class Table(Frame):
             for j in range(m):
                 self._data_vars[i][j].set(data[i][j])
 
-        if self._on_change_data is not None: self._on_change_data()
+        if self._on_change_data is not None:
+            self._on_change_data()
 
     def get_data(self):
         number_of_rows = self._number_of_rows
@@ -219,13 +333,16 @@ class Table(Frame):
             return row
         else:
             if len(data) != number_of_columns:
-                raise ValueError("data has no %d elements: %s" % (number_of_columns, data))
+                raise ValueError(
+                    "data has no %d elements: %s" % (number_of_columns, data)
+                )
 
             row_of_vars = self._data_vars[index]
             for j in range(number_of_columns):
                 row_of_vars[index][j].set(data[j])
 
-            if self._on_change_data is not None: self._on_change_data()
+            if self._on_change_data is not None:
+                self._on_change_data()
 
     def column(self, index, data=None):
         number_of_rows = self._number_of_rows
@@ -245,7 +362,8 @@ class Table(Frame):
             for i in range(self._number_of_columns):
                 self._data_vars[i][index].set(data[i])
 
-            if self._on_change_data is not None: self._on_change_data()
+            if self._on_change_data is not None:
+                self._on_change_data()
 
     def clear(self):
         number_of_rows = self._number_of_rows
@@ -255,7 +373,8 @@ class Table(Frame):
             for j in range(number_of_columns):
                 self._data_vars[i][j].set("")
 
-        if self._on_change_data is not None: self._on_change_data()
+        if self._on_change_data is not None:
+            self._on_change_data()
 
     def delete_row(self, index: int):
         i = index
@@ -272,7 +391,8 @@ class Table(Frame):
 
         self.pop_n_rows(1)
 
-        if self._on_change_data is not None: self._on_change_data()
+        if self._on_change_data is not None:
+            self._on_change_data()
 
     def insert_row(self, data, index=END):
         self.append_n_rows(1)
@@ -295,7 +415,8 @@ class Table(Frame):
         for cell_var, cell_data in zip(list_of_cell_vars, data):
             cell_var.set(cell_data)
 
-        if self._on_change_data is not None: self._on_change_data()
+        if self._on_change_data is not None:
+            self._on_change_data()
 
     def cell(self, row, column, data=None):
         """Get the value of a table cell"""
@@ -303,7 +424,8 @@ class Table(Frame):
             return self._data_vars[row][column].get()
         else:
             self._data_vars[row][column].set(data)
-            if self._on_change_data is not None: self._on_change_data()
+            if self._on_change_data is not None:
+                self._on_change_data()
 
     def __getitem__(self, index):
         if isinstance(index, tuple):
