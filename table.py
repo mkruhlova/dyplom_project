@@ -1,6 +1,6 @@
 from tkinter import Frame, W, Message, CENTER, Label, X, N, E, S, StringVar, END, Entry
 from tkinter.ttk import Combobox
-from typing import Dict
+from typing import Dict, List
 
 
 class Cell(Frame):
@@ -12,6 +12,7 @@ class DataEntryCell(Cell):
         self,
         master,
         variable,
+        disabled: bool = False,
         anchor=W,
         bordercolor=None,
         borderwidth=1,
@@ -38,13 +39,9 @@ class DataEntryCell(Cell):
             font=font,
             background=background,
             foreground=foreground,
+            state="disabled" if disabled else "normal",
         )
         self._message_widget.pack(expand=True, padx=padx, pady=pady, anchor=anchor)
-
-    #     self.bind("<Configure>", self._on_configure)
-    #
-    # def _on_configure(self, event):
-    #     self._message_widget.configure(width=event.width)
 
 
 class DataComboboxCell(Cell):
@@ -129,6 +126,7 @@ class Table(Frame):
         self,
         master,
         columns,
+        disabled_inp_column: List = None,
         comboboxes: Dict = None,
         column_weights=None,
         column_minwidths=None,
@@ -169,6 +167,7 @@ class Table(Frame):
         self._number_of_rows = 0
         self._number_of_columns = len(columns)
         self._comboboxes = comboboxes or {}
+        self._disabled_inputs = disabled_inp_column or []
 
         self._stripped_rows = stripped_rows
 
@@ -205,15 +204,15 @@ class Table(Frame):
         else:
             for j, weight in enumerate(column_weights):
                 self.grid_columnconfigure(j, weight=weight)
+
         if column_minwidths is None:
             column_minwidths = [None for _ in columns]
-        if column_minwidths is not None:
-            self.update_idletasks()
-            for j, minwidth in enumerate(column_minwidths):
-                if minwidth is None:
-                    header_cell = self.grid_slaves(row=0, column=j)[0]
-                    minwidth = header_cell.winfo_reqwidth()
-                self.grid_columnconfigure(j, minsize=minwidth)
+        self.update_idletasks()
+        for j, minwidth in enumerate(column_minwidths):
+            if minwidth is None:
+                header_cell = self.grid_slaves(row=0, column=j)[0]
+                minwidth = header_cell.winfo_reqwidth()
+            self.grid_columnconfigure(j, minsize=minwidth)
 
         if height is not None:
             self.append_n_rows(height)
@@ -223,44 +222,30 @@ class Table(Frame):
     def append_n_rows(self, n):
         number_of_rows = self._number_of_rows
         number_of_columns = self._number_of_columns
+        cnf = dict(
+            borderwidth=self._innerborder_width,
+            bordercolor=self._bordercolor,
+            padx=self._padx,
+            pady=self._pady,
+            foreground=self._cell_foreground,
+            font=self._cell_font,
+            anchor=self._cell_anchor,
+        )
 
         for i in range(number_of_rows + 1, number_of_rows + n + 1):
             list_of_vars = []
             for j in range(number_of_columns):
                 var = StringVar()
                 list_of_vars.append(var)
-
-                bg = (
-                    self._stripped_rows[(i + 1) % 2]
-                    if self._stripped_rows
-                    else self._cell_background
-                )
+                bg = self._stripped_rows[(i + 1) % 2]
+                cnf["background"] = bg
                 if str(j) not in self._comboboxes.keys():
                     cell = DataEntryCell(
-                        self,
-                        borderwidth=self._innerborder_width,
-                        variable=var,
-                        bordercolor=self._bordercolor,
-                        padx=self._padx,
-                        pady=self._pady,
-                        background=bg,
-                        foreground=self._cell_foreground,
-                        font=self._cell_font,
-                        anchor=self._cell_anchor,
+                        self, disabled=j in self._disabled_inputs, variable=var, **cnf
                     )
                 else:
                     cell = DataComboboxCell(
-                        self,
-                        borderwidth=self._innerborder_width,
-                        variable=var,
-                        values=self._comboboxes[str(j)],
-                        bordercolor=self._bordercolor,
-                        padx=self._padx,
-                        pady=self._pady,
-                        background=bg,
-                        foreground=self._cell_foreground,
-                        font=self._cell_font,
-                        anchor=self._cell_anchor,
+                        self, variable=var, values=self._comboboxes[str(j)], **cnf
                     )
                 cell.grid(row=i, column=j, sticky=N + E + W + S)
 
@@ -268,7 +253,7 @@ class Table(Frame):
 
         self._number_of_rows += n
 
-    def pop_n_rows(self, n=1):
+    def pop_n_rows(self, n: int = 1):
         number_of_rows = self._number_of_rows
         number_of_columns = self._number_of_columns
         for i in range(number_of_rows - n + 1, number_of_rows + 1):

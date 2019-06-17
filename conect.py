@@ -1,8 +1,8 @@
 import pymysql
 
-conn = pymysql.connect(
-    host="localhost", port=3306, user="root", passwd="root", db="system_magazynowy"
-)
+from config import db_cnf
+
+conn = pymysql.connect(**db_cnf)
 
 
 def create_cursor(func):
@@ -202,8 +202,8 @@ def select_symbols_for_storage(cur):
 
 
 @create_cursor
-def get_docs_pz(cur):
-    s = "SELECT * FROM `slownik_dokumentow_magazynowych`"
+def get_income_docs(cur):
+    s = "SELECT * FROM `slownik_dokumentow_magazynowych` as sdm WHERE sdm.Jednostka_firmy IS NULL"
     cur.execute(s)
 
     return cur
@@ -219,14 +219,14 @@ def delete_doc(cur, index):
 
 
 @create_cursor
-def insert_doc_unit(
-    cur, nr_dok, kontrahent, data_dok, data_ksiegowania, wartosc, ilosc
+def insert_income_docs(
+    cur, nr_dok, kontrahent, nazwa, data_dok, data_ksiegowania, wartosc, ilosc, cena
 ):
     s = (
-        "INSERT INTO `slownik_dokumentow_magazynowych`(`Nr_Dok`, `Data_Dok`, `Data_Ksiegowania`, `Wartosc`, "
-        "`Ilosc`,`Kontrahent`) "
-        "VALUES ('{}','{}','{}','{}','{}','{}')".format(
-            nr_dok, kontrahent, data_dok, data_ksiegowania, wartosc, ilosc
+        "INSERT INTO `slownik_dokumentow_magazynowych`(`Nr_Dok`, `Kontrahent`, `Nazwa`, `Data_Dok`, `Data_Ksiegowania`, `Cena`, `Wartosc`,"
+        "`Ilosc`) "
+        "VALUES ('{}','{}','{}','{}','{}','{}','{}','{}')".format(
+            nr_dok, kontrahent, nazwa, data_dok, data_ksiegowania, cena, wartosc, ilosc
         )
     )
     cur.execute(s)
@@ -238,24 +238,45 @@ def select_comp_devision_in_income_doc(cur):
     cur.execute(s)
     return cur
 
+@create_cursor
+def select_names(cur):
+    s = "SELECT `Nazwa` FROM system_magazynowy.`slownik_dokumentow_magazynowych`"
+    cur.execute(s)
+    return cur
+
 
 @create_cursor
-def get_income_docs_rw(cur):
-    s = "SELECT * FROM `slownik_dokumentow_magazynowych`"
+def get_expense_docs(cur):
+    s = "SELECT * FROM `slownik_dokumentow_magazynowych` as sdm WHERE sdm.Jednostka_firmy IS NOT NULL"
     cur.execute(s)
 
     return cur
 
 
 @create_cursor
-def insert_income_doc(
-    cur, nr_dok, kontrahent, data_dok, data_ksiegowania, wartosc, ilosc
+def insert_expense_docs(
+    cur,
+    nr_dok,
+    jednostka_firmy,
+    data_dok,
+    data_ksiegowania,
+    wartosc,
+    ilosc,
+    nazwa,
+    cena,
 ):
     s = (
-        "INSERT INTO `slownik_dokumentow_magazynowych`(`Nr_Dok`,`Kontrahent`,  `Data_Dok`, `Data_Ksiegowania`,"
-        " `Wartosc`, `Ilosc`)"
-        "VALUES ('{}','{}','{}','{}','{}','{}')".format(
-            nr_dok, kontrahent, data_dok, data_ksiegowania, wartosc, ilosc
+        "INSERT INTO `slownik_dokumentow_magazynowych`(`Nr_Dok`,`Jednostka_firmy`,`Nazwa`, `Data_Dok`, `Data_Ksiegowania`,"
+        " `Wartosc`, `Ilosc`, `Cena`)"
+        "VALUES ('{}','{}','{}','{}','{}','{}','{}','{}')".format(
+            nr_dok,
+            jednostka_firmy,
+            nazwa,
+            data_dok,
+            data_ksiegowania,
+            wartosc,
+            ilosc,
+            cena,
         )
     )
 
@@ -294,15 +315,11 @@ def select_warehouse_records(cur):
 
 
 @create_cursor
-def insert_warehouse_records(
-    cur, index, nazwa, jednostka_miary, ilosc, cena, wartosc, grupa_materialowa
-):
+def insert_warehouse_records(cur, **kwargs):
     s = (
         "INSERT INTO `slownik_dokumentow_magazynowych`(`Index`, `Nazwa`, `Jednostka miary`, "
-        "`Ilosc`, `Cena`, `Wartosc`, `Grupa materialowa`)"
-        "VALUES ('{}','{}','{}','{}','{}','{}')".format(
-            index, nazwa, jednostka_miary, ilosc, cena, wartosc, grupa_materialowa
-        )
+        "`Cena`, `Wartosc`, `Ilosc`)"
+        "VALUES ('{}','{}','{}','{}','{}','{}')".format(*kwargs.values())
     )
 
     cur.execute(s)
@@ -368,9 +385,17 @@ def get_group_material(cur):
 
 @create_cursor
 def get_group_materials(cur):
-    s = "SELECT `Nazwa_GRUPY` FROM system_magazynowy.`slownik jednostki firmy`"
+    s = "SELECT * FROM system_magazynowy.`slownik jednostki firmy`"
     cur.execute(s)
     return cur
+
+
+@create_cursor
+def get_doc_mag_max_index(cur):
+    s = "SELECT `Nr_Dok` FROM `slownik_dokumentow_magazynowych` order by `Nr_Dok` desc limit 1"
+    cur.execute(s)
+
+    return cur._rows[0][0]
 
 
 @create_cursor

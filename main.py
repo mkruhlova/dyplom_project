@@ -21,9 +21,9 @@ class AppFrame(tk.Tk):
     def change(self, frame):
         if self.frame.__class__.__name__ == frame.__name__:
             return
-        self.frame.pack_forget()
         if hasattr(self.frame, "table"):
             self.frame.table.pack_forget()
+        self.frame.pack_forget()
         self.frame = frame(self)
         self.frame.pack()
 
@@ -33,14 +33,7 @@ class MainFrame(BaseFrame, ttk.Frame):
         ttk.Frame.__init__(self, master, **kwargs)
         master.title(config.APP_TITLE)
         master.geometry("850x650+300+200")
-        cal = DateEntry(
-            self,
-            width=12,
-            background="darkblue",
-            foreground="white",
-            borderwidth=2,
-            year=2019,
-        )
+        cal = DateEntry(self, **config.date_entry_cnf)
         cal.pack(padx=10, pady=10)
         text = tk.Label(
             self,

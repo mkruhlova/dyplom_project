@@ -1,30 +1,27 @@
-from tkinter import Frame, Button, Label, messagebox
-from tkinter import ttk
+from tkinter import Frame, Button, messagebox, Entry, Label, ttk
 from tkinter.constants import *
-from tkinter.ttk import Entry
 
 from tkcalendar import DateEntry
 
 from base_frame import BaseFrame
 from conect import (
-    delete_doc,
-    get_income_docs,
+    insert_expense_docs,
+    get_expense_docs,
+    delete_income_doc,
     get_storage_names,
-    select_agent,
-    insert_income_docs,
-    get_doc_mag_max_index)
+    select_comp_devision_in_income_doc,
+    select_names, get_doc_mag_max_index)
 from config import date_entry_cnf
 from table import Table
-from utils import is_datetime_validate
 
 
-class IncomeDocs(BaseFrame, Frame):
+class ExpenseDocs(BaseFrame, Frame):
     def __init__(self, master=None, **kwargs):
         Frame.__init__(self, master, **kwargs)
 
         self._columns = [
             "Nr Dok",
-            "Kontrahent",
+            "Jednostka Firmy",
             "Nazwa",
             "Data Dok",
             "Data Ksiegowania",
@@ -37,10 +34,10 @@ class IncomeDocs(BaseFrame, Frame):
         self.table = None
         self.row_id_input = None
 
-        storage_names = self.get_storage_names()
-        print(storage_names)
+        company_names = self.get_company_names()
+        print(company_names)
         Label(self, text="Magazyny").pack()
-        self.combo1 = ttk.Combobox(self, values=storage_names)
+        self.combo1 = ttk.Combobox(self, values=company_names)
         self.combo1.pack()
 
         ttk.Label(self, text="Choose date").pack(padx=10, pady=10)
@@ -48,16 +45,15 @@ class IncomeDocs(BaseFrame, Frame):
         cal = DateEntry(self, **date_entry_cnf)
         cal.pack(padx=10, pady=10)
 
-        master.title("Dokumenty Przychodowe")
+        master.title("Dokumenty Rozchodowe")
         master.geometry("850x650+300+200")
         self.init_table()
 
     def init_table(self):
-
-        inf_about_kontrahent = self.get_inf_about_kontrahent()
-        comboboxes = {"1": inf_about_kontrahent}
+        inf_about_company = self.get_inf_about_company()
+        get_names = self.get_inf_names()
+        comboboxes = {"1": inf_about_company, "2": get_names}
         disabled = [0]
-
         self.table = Table(
             self.master,
             self._columns,
@@ -65,11 +61,10 @@ class IncomeDocs(BaseFrame, Frame):
             comboboxes=comboboxes,
         )
         self.table.pack(fill=X, padx=10, pady=10)
-        rows = get_income_docs()
+        rows = get_expense_docs()
         result = []
         for row in rows:
-            r = row[:2] + row[3:]
-            result.append(r)
+            result.append(row[:1] + row[2:])
         if result:
             self.table.set_data(result)
 
@@ -77,30 +72,39 @@ class IncomeDocs(BaseFrame, Frame):
         self.row_id_input = Entry(self)
         self.row_id_input.pack(side="left")
 
-        btn = Button(self, text="Delete row",padx=5, pady=5,  command=self.delete_row)
-        btn.pack(side="left")
+        btn = Button(self, text="Delete row", command=self.delete_row)
 
-        btn = Button(self, text="Add row", padx=5, pady=5,command=self.add_row)
-        btn.pack(side="left")
+        btn.pack(side="left", padx=5, pady=5)
 
-        btn = Button(self, text="Save", padx=5, pady=5, command=self.save)
-        btn.pack(side="left")
+        btn = Button(self, text="Add row", command=self.add_row)
+        btn.pack(side="left", padx=5, pady=5)
+
+        btn = Button(self, text="Save", command=self.save)
+        btn.pack(side="left", padx=5, pady=5)
 
     @staticmethod
-    def get_inf_about_kontrahent():
-        kontrahents_names = []
-        rows = select_agent()
+    def get_inf_about_company():
+        company_names = []
+        rows = select_comp_devision_in_income_doc()
         for row in rows:
-            kontrahents_names.append(row[0])
-        return kontrahents_names
+            company_names.append(row[0])
+        return company_names
 
     @staticmethod
-    def get_storage_names():
-        storage_names = []
+    def get_inf_names():
+        staff_names = []
+        rows = select_names()
+        for row in rows:
+            staff_names.append(row[0])
+        return staff_names
+
+    @staticmethod
+    def get_company_names():
+        company_names = []
         rows = get_storage_names()
         for row in rows:
-            storage_names.append(row[0])
-        return storage_names
+            company_names.append(row[0])
+        return company_names
 
     def add_row(self):
         last_row_index = self.table._number_of_rows
@@ -110,27 +114,23 @@ class IncomeDocs(BaseFrame, Frame):
 
     def save(self):
         data = self.table.get_data()
+        with open('EXPENSE.TXT', 'w') as f:
+            f.write(str(data))
         s = ""
         for lst in data:
             s += " ".join(lst) + " "
         print(s)
         first_row = data[-1]
-        d = dict(
+        insert_expense_docs(
             nr_dok=first_row[0],
-            kontrahent=first_row[1],
+            jednostka_firmy=first_row[1],
             nazwa=first_row[2],
             data_dok=first_row[3],
             data_ksiegowania=first_row[4],
-            cena=first_row[5],
-            wartosc=first_row[6],
-            ilosc=first_row[7],
+            wartosc=first_row[5],
+            ilosc=first_row[6],
+            cena=first_row[7],
         )
-        if not is_datetime_validate(d["data_dok"]) or not is_datetime_validate(
-            d["data_ksiegowania"]
-        ):
-            messagebox.showwarning("Bad datetime format", "Please try again")
-            return
-        insert_income_docs(**d)
 
     def delete_row(self):
         row_id = self.row_id_input.get()
@@ -148,4 +148,9 @@ class IncomeDocs(BaseFrame, Frame):
             return
 
         self.table.delete_row(index)
-        delete_doc(row_id)
+        delete_income_doc(row_id)
+
+
+
+
+

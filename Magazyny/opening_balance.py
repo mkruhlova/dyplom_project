@@ -21,9 +21,9 @@ class BalanceOpen(BaseFrame, Frame):
             "Lp",
             "Nazwa",
             "Jednostka miary",
-            "Ilosc",
             "Cena",
             "Wartosc",
+            "Ilosc",
         ]
 
         self.master = master
@@ -100,9 +100,9 @@ class BalanceOpen(BaseFrame, Frame):
             lp=first_row[1],
             nazwa=first_row[2],
             jednostka_miary=first_row[3],
-            ilosc=first_row[4],
-            cena=first_row[5],
+            cena=first_row[4],
             wartosc=first_row[5],
+            ilosc=first_row[6],
         )
 
     def delete_row(self):

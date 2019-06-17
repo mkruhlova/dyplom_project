@@ -33,13 +33,13 @@ class CompDev(BaseFrame, Frame):
         self.row_id_input = Entry(self)
         self.row_id_input.pack(side="left")
 
-        btn = Button(self, text="Delete row", command=self.delete_row)
+        btn = Button(self, text="Delete row", padx=5, pady=5, command=self.delete_row)
         btn.pack(side="left")
 
-        btn = Button(self, text="Add row", command=self.add_row)
+        btn = Button(self, text="Add row", padx=5, pady=5, command=self.add_row)
         btn.pack(side="left")
 
-        btn = Button(self, text="Save", command=self.save)
+        btn = Button(self, text="Save", padx=5, pady=5, command=self.save)
         btn.pack(side="left")
 
     def add_row(self):
