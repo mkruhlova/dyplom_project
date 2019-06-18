@@ -27,7 +27,7 @@ class WarehouseRec(BaseFrame, Frame):
     def __init__(self, master=None, **kwargs):
         Frame.__init__(self, master, **kwargs)
 
-        self._columns = ["Index", "Nazwa", "Cena", "Wartosc", "Ilosc"]
+        self._columns = ["Index", "Nazwa", "Ilosc", "Cena", "Wartosc"]
 
         self.master = master
         self.table = None
@@ -51,93 +51,94 @@ class WarehouseRec(BaseFrame, Frame):
         if result:
             self.table.set_data(result)
 
-        Label(self, text="Put your id: ").pack(side="left")
+        Label(self, text="Podaj ID: ").pack(side="left")
         self.row_id_input = Entry(self)
         self.row_id_input.pack(side="left")
 
-        btn = Button(self, text="Delete row", command=self.delete_row)
-        btn.pack(side="left")
+        btn = Button(self, text="Usun wiersz", command=self.delete_row)
+        btn.pack(side="left", padx=5, pady=5)
 
-        btn = Button(self, text="Add row", command=self.add_row)
-        btn.pack(side="left")
+        btn = Button(self, text="Dodaj wiersz", command=self.add_row)
+        btn.pack(side="left", padx=5, pady=5)
 
-        btn = Button(self, text="Save", command=self.save)
-        btn.pack(side="left")
+        btn = Button(self, text="Zapisz", command=self.save)
+        btn.pack(side="left", padx=5, pady=5)
 
     def get_warehouse_records(self):
         result = []
-        bilance_rows = get_bilance_otwarcia()
-        income_rows = get_income_docs()
-        expense_rows = get_expense_docs()
-
-        for row in bilance_rows:
-            qq = list(without_index(row, 1))
-            qq = list(without_index(qq, 2))
-            result.append(qq)
-
-        r = self.merge_income_expense(income_rows, expense_rows)
-        for i in range(len(r)):
-            r[i] = without_index(r[i], 1)
-            r[i] = without_index(r[i], 2)
-            r[i] = without_index(r[i], 2)
-        result.extend(r)
-        a = []
-        for r in result:
-            index = self.get_index_by_name(a, r[1])
-            if index == -1:
-                a.append(r)
-            else:
-                a[index][2] += r[2]
-                a[index][3] += r[3]
-                a[index][4] += r[4]
-
-        return a
-
-    def merge_income_expense(self, income_rows, expense_rows):
-        merged_incomes = self.merge_rows(
-            [list(without_index(row, 2)) for row in income_rows]
-        )
-        print(merged_incomes)
-
-        merged_expense = self.merge_rows(
-            [list(without_index(row, 1)) for row in expense_rows]
-        )
-        print(merged_expense)
-
-        # if len(merged_incomes) < len(merged_expense):
-        #     messagebox.showwarning("Please try again", "More expenses than incomes")
-        #     return
-
-        return self.sub_rows(merged_incomes, merged_expense)
-
-    def merge_rows(self, rows):
-        result = []
-        for r in rows:
-            index = self.get_index_by_name(result, r[2])
-            if index == -1:
-                result.append(r)
-            else:
-                result[index][5] += r[5]
-                result[index][6] += r[6]
-                result[index][7] += r[7]
+        rows = select_warehouse_records()
+        for row in rows:
+            result.append(row[:5])
         return result
+        #
+        # for row in bilance_rows:
+        #     qq = list(without_index(row, 1))
+        #     qq = list(without_index(qq, 2))
+        #     result.append(qq)
+        #
+        # r = self.merge_income_expense(income_rows, expense_rows)
+        # for i in range(len(r)):
+        #     r[i] = without_index(r[i], 1)
+        #     r[i] = without_index(r[i], 2)
+        #     r[i] = without_index(r[i], 2)
+        # result.extend(r)
+        # a = []
+        # for r in result:
+        #     index = self.get_index_by_name(a, r[1])
+        #     if index == -1:
+        #         a.append(r)
+        #     else:
+        #         a[index][2] += r[2]
+        #         a[index][3] += r[3]
+        #         a[index][4] += r[4]
+        #
+        # return a
 
-    def sub_rows(self, merged_incomes, merged_expense):
-        for r in merged_incomes:
-            index = self.get_index_by_name(merged_expense, r[2])
-            if index != -1:
-                r[5] -= merged_expense[index][5]
-                r[6] -= merged_expense[index][6]
-                r[7] -= merged_expense[index][7]
-                # if r[5] < 0 or r[6] < 0:
-                #     messagebox.showwarning("Please try again", "More expenses than incomes")
-        return merged_incomes
-
-    def get_index_by_name(self, result: List, name: str):
-        for i, r in enumerate(result):
-            if name in r:
-                return i
-        return -1
+    # def merge_income_expense(self, income_rows, expense_rows):
+    #     merged_incomes = self.merge_rows(
+    #         [list(without_index(row, 2)) for row in income_rows]
+    #     )
+    #     print(merged_incomes)
+    #
+    #     merged_expense = self.merge_rows(
+    #         [list(without_index(row, 1)) for row in expense_rows]
+    #     )
+    #     print(merged_expense)
+    #
+    #     # if len(merged_incomes) < len(merged_expense):
+    #     #     messagebox.showwarning("Please try again", "More expenses than incomes")
+    #     #     return
+    #
+    #     return self.sub_rows(merged_incomes, merged_expense)
+    #
+    # def merge_rows(self, rows):
+    #     result = []
+    #     for r in rows:
+    #         index = self.get_index_by_name(result, r[2])
+    #         if index == -1:
+    #             result.append(r)
+    #         else:
+    #             result[index][5] += r[5]
+    #             result[index][6] += r[6]
+    #             result[index][7] += r[7]
+    #     return result
+    #
+    # def sub_rows(self, merged_incomes, merged_expense):
+    #     for r in merged_incomes:
+    #         index = self.get_index_by_name(merged_expense, r[2])
+    #         if index != -1:
+    #             r[5] -= merged_expense[index][5]
+    #             r[6] -= merged_expense[index][6]
+    #             r[7] -= merged_expense[index][7]
+    #             # if r[5] < 0 or r[6] < 0:
+    #             #     messagebox.showwarning("Please try again", "More expenses than incomes")
+    #     return merged_incomes
+    #
+    # def get_index_by_name(self, result: List, name: str):
+    #     for i, r in enumerate(result):
+    #         if name in r:
+    #             return i
+    #     return -1
 
     @staticmethod
     def get_unit_devision():
@@ -185,7 +186,7 @@ class WarehouseRec(BaseFrame, Frame):
     def delete_row(self):
         row_id = self.row_id_input.get()
         if len(row_id) == 0 or not row_id.isnumeric():
-            messagebox.showwarning("Bad row ID", "Please try again")
+            messagebox.showwarning("Zle podane ID", "Sprobuj ponownie")
             return
         table_data = self.table.get_data()
         index = -1
@@ -194,7 +195,7 @@ class WarehouseRec(BaseFrame, Frame):
                 index = i
                 break
         if index == -1:
-            messagebox.showwarning("Bad row ID", "Please try again")
+            messagebox.showwarning("Zle podane ID", "Sprobuj ponownie")
             return
 
         self.table.delete_row(index)

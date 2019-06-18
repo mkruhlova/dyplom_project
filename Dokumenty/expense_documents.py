@@ -1,4 +1,4 @@
-from tkinter import Frame, Button, messagebox, Entry, Label, ttk
+from tkinter import Frame, Button, messagebox, Entry, Label, ttk, Text, IntVar
 from tkinter.constants import *
 
 from tkcalendar import DateEntry
@@ -10,7 +10,9 @@ from conect import (
     delete_income_doc,
     get_storage_names,
     select_comp_devision_in_income_doc,
-    select_names, get_doc_mag_max_index)
+    select_names,
+    get_doc_mag_max_index,
+    update_expense_docs_in_kart, check_if_name_exist)
 from config import date_entry_cnf
 from table import Table
 
@@ -18,6 +20,7 @@ from table import Table
 class ExpenseDocs(BaseFrame, Frame):
     def __init__(self, master=None, **kwargs):
         Frame.__init__(self, master, **kwargs)
+
 
         self._columns = [
             "Nr Dok",
@@ -32,18 +35,14 @@ class ExpenseDocs(BaseFrame, Frame):
 
         self.master = master
         self.table = None
-        self.row_id_input = None
+        self. \
+            row_id_input = None
 
         company_names = self.get_company_names()
         print(company_names)
         Label(self, text="Magazyny").pack()
         self.combo1 = ttk.Combobox(self, values=company_names)
         self.combo1.pack()
-
-        ttk.Label(self, text="Choose date").pack(padx=10, pady=10)
-
-        cal = DateEntry(self, **date_entry_cnf)
-        cal.pack(padx=10, pady=10)
 
         master.title("Dokumenty Rozchodowe")
         master.geometry("850x650+300+200")
@@ -68,19 +67,21 @@ class ExpenseDocs(BaseFrame, Frame):
         if result:
             self.table.set_data(result)
 
-        Label(self, text="Put your id: ").pack(side="left")
+        Label(self, text="Wpisz numer dokumentu: ").pack(side="left")
         self.row_id_input = Entry(self)
         self.row_id_input.pack(side="left")
 
-        btn = Button(self, text="Delete row", command=self.delete_row)
+        btn = Button(self, text="Usun wiersz", command=self.delete_row)
 
         btn.pack(side="left", padx=5, pady=5)
 
-        btn = Button(self, text="Add row", command=self.add_row)
+        btn = Button(self, text="Dodaj wiersz", command=self.add_row)
         btn.pack(side="left", padx=5, pady=5)
 
-        btn = Button(self, text="Save", command=self.save)
+        btn = Button(self, text="Zapisz", command=self.save)
         btn.pack(side="left", padx=5, pady=5)
+
+
 
     @staticmethod
     def get_inf_about_company():
@@ -114,14 +115,8 @@ class ExpenseDocs(BaseFrame, Frame):
 
     def save(self):
         data = self.table.get_data()
-        with open('EXPENSE.TXT', 'w') as f:
-            f.write(str(data))
-        s = ""
-        for lst in data:
-            s += " ".join(lst) + " "
-        print(s)
         first_row = data[-1]
-        insert_expense_docs(
+        d = dict(
             nr_dok=first_row[0],
             jednostka_firmy=first_row[1],
             nazwa=first_row[2],
@@ -131,11 +126,26 @@ class ExpenseDocs(BaseFrame, Frame):
             ilosc=first_row[6],
             cena=first_row[7],
         )
+        if self.is_name_valide(d['nazwa']):
+            insert_expense_docs(**d)
+            update_expense_docs_in_kart(**d)
+
+    def update_expense_docs_in_kart_save(self):
+        wartosc = self.table.get_data()
+        if int('wartosc') <= 0:
+            messagebox.showwarning("chuj")
+            return
+
+    def is_name_valide(self, name):
+        if not check_if_name_exist(name):
+            messagebox.showwarning("Zla nazwa", "Sprobuj ponownie")
+            return False
+        return True
 
     def delete_row(self):
         row_id = self.row_id_input.get()
         if len(row_id) == 0 or not row_id.isnumeric():
-            messagebox.showwarning("Bad row ID", "Please try again")
+            messagebox.showwarning("Zle ID", "Sprobuj ponownie")
             return
         table_data = self.table.get_data()
         index = -1
@@ -144,13 +154,8 @@ class ExpenseDocs(BaseFrame, Frame):
                 index = i
                 break
         if index == -1:
-            messagebox.showwarning("Bad row ID", "Please try again")
+            messagebox.showwarning("Zle ID", "Sprobuj ponownie")
             return
 
         self.table.delete_row(index)
         delete_income_doc(row_id)
-
-
-
-
-

@@ -12,7 +12,9 @@ from conect import (
     get_storage_names,
     select_agent,
     insert_income_docs,
-    get_doc_mag_max_index)
+    get_doc_mag_max_index,
+    insert_income_docs_into_kartoteka,
+)
 from config import date_entry_cnf
 from table import Table
 from utils import is_datetime_validate
@@ -21,6 +23,10 @@ from utils import is_datetime_validate
 class IncomeDocs(BaseFrame, Frame):
     def __init__(self, master=None, **kwargs):
         Frame.__init__(self, master, **kwargs)
+
+        self.EntryC = Entry(self, width=20, font='Arial 16')
+        self.EntryB = Entry(self, width=10, font='Arial 16')
+        self.EntryA = Entry(self, width=10, font='Arial 16')
 
         self._columns = [
             "Nr Dok",
@@ -43,17 +49,12 @@ class IncomeDocs(BaseFrame, Frame):
         self.combo1 = ttk.Combobox(self, values=storage_names)
         self.combo1.pack()
 
-        ttk.Label(self, text="Choose date").pack(padx=10, pady=10)
-
-        cal = DateEntry(self, **date_entry_cnf)
-        cal.pack(padx=10, pady=10)
-
         master.title("Dokumenty Przychodowe")
         master.geometry("850x650+300+200")
         self.init_table()
+        self.init_table_btns()
 
     def init_table(self):
-
         inf_about_kontrahent = self.get_inf_about_kontrahent()
         comboboxes = {"1": inf_about_kontrahent}
         disabled = [0]
@@ -65,6 +66,9 @@ class IncomeDocs(BaseFrame, Frame):
             comboboxes=comboboxes,
         )
         self.table.pack(fill=X, padx=10, pady=10)
+        self.init_table_data()
+
+    def init_table_data(self):
         rows = get_income_docs()
         result = []
         for row in rows:
@@ -73,18 +77,43 @@ class IncomeDocs(BaseFrame, Frame):
         if result:
             self.table.set_data(result)
 
+    def init_table_btns(self):
         Label(self, text="Put your id: ").pack(side="left")
         self.row_id_input = Entry(self)
         self.row_id_input.pack(side="left")
 
-        btn = Button(self, text="Delete row",padx=5, pady=5,  command=self.delete_row)
-        btn.pack(side="left")
+        btn = Button(self, text="Usun wiersz", padx=5, pady=5, command=self.delete_row)
+        btn.pack(side="left", padx=5, pady=5)
 
-        btn = Button(self, text="Add row", padx=5, pady=5,command=self.add_row)
-        btn.pack(side="left")
+        btn = Button(self, text="Dodaj wiersz", padx=5, pady=5, command=self.add_row)
+        btn.pack(side="left", padx=5, pady=5)
 
-        btn = Button(self, text="Save", padx=5, pady=5, command=self.save)
-        btn.pack(side="left")
+        btn = Button(self, text="Zapisz", padx=5, pady=5, command=self.save)
+        btn.pack(side="left", padx=5, pady=5)
+
+        Label(self, text='Ilosc').pack()
+        self.EntryA = Entry(self, width=10, font='Arial 16')
+        self.EntryA.pack()
+
+        Label(self, text='Cena').pack()
+        self.EntryB = Entry(self, width=10, font='Arial 16')
+        self.EntryB.pack()
+
+        self.EntryC = Entry(self, width=20, font='Arial 16')
+        self.EntryC.pack()
+
+        but = Button(self, text='Wartosc', command=self.multiply)
+        but.pack()
+
+    def multiply(self):
+        a = self.EntryA.get()
+        a = int(a)
+
+        b = self.EntryB.get()
+        b = int(b)
+
+        result = str(a * b)
+        self.EntryC.insert(0, result)
 
     @staticmethod
     def get_inf_about_kontrahent():
@@ -110,10 +139,6 @@ class IncomeDocs(BaseFrame, Frame):
 
     def save(self):
         data = self.table.get_data()
-        s = ""
-        for lst in data:
-            s += " ".join(lst) + " "
-        print(s)
         first_row = data[-1]
         d = dict(
             nr_dok=first_row[0],
@@ -128,14 +153,15 @@ class IncomeDocs(BaseFrame, Frame):
         if not is_datetime_validate(d["data_dok"]) or not is_datetime_validate(
             d["data_ksiegowania"]
         ):
-            messagebox.showwarning("Bad datetime format", "Please try again")
+            messagebox.showwarning("Zle wpisywana data", "Sporobuj ponownie")
             return
         insert_income_docs(**d)
+        insert_income_docs_into_kartoteka(**d)
 
     def delete_row(self):
         row_id = self.row_id_input.get()
         if len(row_id) == 0 or not row_id.isnumeric():
-            messagebox.showwarning("Bad row ID", "Please try again")
+            messagebox.showwarning("Zle podane ID", "Sporobuj ponownie")
             return
         table_data = self.table.get_data()
         index = -1
@@ -144,7 +170,7 @@ class IncomeDocs(BaseFrame, Frame):
                 index = i
                 break
         if index == -1:
-            messagebox.showwarning("Bad row ID", "Please try again")
+            messagebox.showwarning("Zle podane ID", "Sporobuj ponownie")
             return
 
         self.table.delete_row(index)

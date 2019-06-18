@@ -13,21 +13,21 @@ class LoginFrame(tk.Frame):
 
         self.MainFrame = MainFrame
 
-        lbl = tk.Label(self, text="Enter login")
+        lbl = tk.Label(self, text="Zaloguj sie")
         lbl.pack()
         self.login = tk.Entry(self, show="*")
         self.login.pack()
         self.login.focus()
         self.login.bind("<Return>", self.check)
 
-        lbl = tk.Label(self, text="Enter password")
+        lbl = tk.Label(self, text="Wpisz haslo")
         lbl.pack()
         self.pwd = tk.Entry(self, show="*")
         self.pwd.pack()
         self.pwd.bind("<Return>", self.check)
-        btn = tk.Button(self, text="Done", command=self.check)
+        btn = tk.Button(self, text="Gotowe", command=self.check)
         btn.pack()
-        btn = tk.Button(self, text="Cancel", command=self.quit)
+        btn = tk.Button(self, text="Odrzuc", command=self.quit)
         btn.pack()
 
     def check(self, event=None):
@@ -35,7 +35,7 @@ class LoginFrame(tk.Frame):
             self.pwd.get() == config.DEFAULT_PASSWORD
             and self.login.get() == config.DEFAULT_LOGIN
         ):
-            messagebox.showinfo("Successfully login", "Welcome")
+            messagebox.showinfo("Pomyslne zalogowanie", "Witam")
             self.master.change(self.MainFrame)
         else:
-            messagebox.showwarning("Login failed", "Please try again")
+            messagebox.showwarning("Blad logowania", "Sproboj ponownie")

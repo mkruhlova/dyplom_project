@@ -37,7 +37,7 @@ class MainFrame(BaseFrame, ttk.Frame):
         cal.pack(padx=10, pady=10)
         text = tk.Label(
             self,
-            text="Application for Manager your Storage!",
+            text="Aplikacja dla zarzadzania magazynem",
             fg="darkblue",
             font="Helvetica 16 bold italic",
         )

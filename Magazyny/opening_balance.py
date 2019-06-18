@@ -7,6 +7,7 @@ from conect import (
     delete_data_bilans,
     select_opening_balance,
     select_units,
+    insert_bilans_into_kart,
 )
 
 from table import Table
@@ -21,9 +22,9 @@ class BalanceOpen(BaseFrame, Frame):
             "Lp",
             "Nazwa",
             "Jednostka miary",
-            "Cena",
-            "Wartosc",
             "Ilosc",
+            "Cena",
+            "Wartosc"
         ]
 
         self.master = master
@@ -70,32 +71,28 @@ class BalanceOpen(BaseFrame, Frame):
         return date_of_bilans
 
     def init_btns(self):
-        row_id_input_label = Label(self, text="Put your id: ")
+        row_id_input_label = Label(self, text="Podaj index: ")
         row_id_input_label.pack(side="left")
 
         self.row_id_input = Entry(self)
         self.row_id_input.pack(side="left")
 
-        btn = Button(self, text="Delete row", command=self.delete_row)
-        btn.pack(side="left")
+        btn = Button(self, text="Usun wiersz", command=self.delete_row)
+        btn.pack(side="left", padx=5, pady=5)
 
-        btn = Button(self, text="Add row", command=self.add_row)
-        btn.pack(side="left")
+        btn = Button(self, text="Dodaj wiersz", command=self.add_row)
+        btn.pack(side="left", padx=5, pady=5)
 
-        btn = Button(self, text="Save", command=self.save)
-        btn.pack(side="left")
+        btn = Button(self, text="Zapisz", command=self.save)
+        btn.pack(side="left", padx=5, pady=5)
 
     def add_row(self):
         self.table.append_n_rows(1)
 
     def save(self):
         data = self.table.get_data()
-        s = ""
-        for lst in data:
-            s += " ".join(lst) + " "
-        print(s)
         first_row = data[-1]
-        insert_data_bilans(
+        d = dict(
             index=first_row[0],
             lp=first_row[1],
             nazwa=first_row[2],
@@ -104,11 +101,13 @@ class BalanceOpen(BaseFrame, Frame):
             wartosc=first_row[5],
             ilosc=first_row[6],
         )
+        insert_data_bilans(**d)
+        insert_bilans_into_kart(**d)
 
     def delete_row(self):
         row_id = self.row_id_input.get()
         if len(row_id) == 0 or not row_id.isnumeric():
-            messagebox.showwarning("Bad row ID", "Please try again")
+            messagebox.showwarning("Zle podane ID", "Sporobuj ponownie")
             return
         table_data = self.table.get_data()
         index = -1
@@ -117,7 +116,7 @@ class BalanceOpen(BaseFrame, Frame):
                 index = i
                 break
         if index == -1:
-            messagebox.showwarning("Bad row ID", "Please try again")
+            messagebox.showwarning("Zle podane ID", "Sporobuj ponownie")
             return
 
         self.table.delete_row(index)

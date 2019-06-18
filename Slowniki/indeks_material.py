@@ -59,20 +59,20 @@ class IndexMat(BaseFrame, Frame):
         return available_materials
 
     def init_btns(self):
-        row_id_input_label = Label(self, text="Put your id: ")
+        row_id_input_label = Label(self, text="Podaj ID: ")
         row_id_input_label.pack(side="left")
 
         self.row_id_input = Entry(self)
         self.row_id_input.pack(side="left")
 
-        btn = Button(self, text="Delete row", command=self.delete_row)
-        btn.pack(side="left")
+        btn = Button(self, text="Usun wiersz", command=self.delete_row)
+        btn.pack(side="left", padx=5, pady=5)
 
-        btn = Button(self, text="Add row", command=self.add_row)
-        btn.pack(side="left")
+        btn = Button(self, text="Dodaj wiersz", command=self.add_row)
+        btn.pack(side="left", padx=5, pady=5)
 
-        btn = Button(self, text="Save", command=self.save)
-        btn.pack(side="left")
+        btn = Button(self, text="Zapisz", command=self.save)
+        btn.pack(side="left", padx=5, pady=5)
 
     def add_row(self):
         self.table.append_n_rows(1)
@@ -95,7 +95,7 @@ class IndexMat(BaseFrame, Frame):
     def delete_row(self):
         row_id = self.row_id_input.get()
         if len(row_id) == 0 or not row_id.isnumeric():
-            messagebox.showwarning("Bad row ID", "Please try again")
+            messagebox.showwarning("Zle podane ID", "Sprobuj ponownie")
             return
         table_data = self.table.get_data()
         index = -1
@@ -104,7 +104,7 @@ class IndexMat(BaseFrame, Frame):
                 index = i
                 break
         if index == -1:
-            messagebox.showwarning("Bad row ID", "Please try again")
+            messagebox.showwarning("Zle podane ID", "Sprobuj ponownie")
             return
 
         self.table.delete_row(index)

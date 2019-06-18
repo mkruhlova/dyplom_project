@@ -33,14 +33,14 @@ class CompDev(BaseFrame, Frame):
         self.row_id_input = Entry(self)
         self.row_id_input.pack(side="left")
 
-        btn = Button(self, text="Delete row", padx=5, pady=5, command=self.delete_row)
-        btn.pack(side="left")
+        btn = Button(self, text="Usun wiersz", padx=5, pady=5, command=self.delete_row)
+        btn.pack(side="left", padx=5, pady=5)
 
-        btn = Button(self, text="Add row", padx=5, pady=5, command=self.add_row)
-        btn.pack(side="left")
+        btn = Button(self, text="Dodaj wiersz", padx=5, pady=5, command=self.add_row)
+        btn.pack(side="left", padx=5, pady=5)
 
-        btn = Button(self, text="Save", padx=5, pady=5, command=self.save)
-        btn.pack(side="left")
+        btn = Button(self, text="Zapisz", padx=5, pady=5, command=self.save)
+        btn.pack(side="left", padx=5, pady=5)
 
     def add_row(self):
         self.table.append_n_rows(1)

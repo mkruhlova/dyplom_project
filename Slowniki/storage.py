@@ -59,14 +59,14 @@ class Storage(BaseFrame, Frame):
         self.row_id_input = Entry(self)
         self.row_id_input.pack(side="left")
 
-        btn = Button(self, text="Delete row", command=self.delete_row)
-        btn.pack(side="left")
+        btn = Button(self, text="Usun wiersz", command=self.delete_row)
+        btn.pack(side="left", padx=5, pady=5)
 
-        btn = Button(self, text="Add row", command=self.add_row)
-        btn.pack(side="left")
+        btn = Button(self, text="Dodaj wiersz", command=self.add_row)
+        btn.pack(side="left", padx=5, pady=5)
 
-        btn = Button(self, text="Save", command=self.save)
-        btn.pack(side="left")
+        btn = Button(self, text="Zapisz", command=self.save)
+        btn.pack(side="left", padx=5, pady=5)
 
     def add_row(self):
         self.table.append_n_rows(1)

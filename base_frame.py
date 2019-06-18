@@ -126,6 +126,8 @@ class BaseFrame(tk.Frame):
         opts = opts or {}
         for el in elements:
             menu.add_cascade(label=el, **opts.get(el, {}))
+
+
 from Pomoc.about_prog import AboutProg
 from Pomoc.instruction import InstructProg
 from Slowniki.indeks_material import IndexMat

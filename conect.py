@@ -37,8 +37,8 @@ def insert_data(cur, id, nazwa_jednostki, symbol):
 @create_cursor
 def delete_data(cur, index):
     s = (
-        "DELETE FROM `system_magazynowy`.`slownik jednostki firmy` WHERE (`ID` = '%s')"
-        % index
+            "DELETE FROM `system_magazynowy`.`slownik jednostki firmy` WHERE (`ID` = '%s')"
+            % index
     )
     cur.execute(s)
 
@@ -75,7 +75,7 @@ def get_kartoteka_index(cur):
 
 @create_cursor
 def insert_data_index(
-    cur, id, nazwa_materialu, jednostka_miary, grupa_materialowa, symbol
+        cur, id, nazwa_materialu, jednostka_miary, grupa_materialowa, symbol
 ):
     s = "INSERT INTO `kartoteka indeksow materialowych`(`ID`,`Nazwa_materialu`,`Jednostka_miary`,`Grupa_materialowa`, `Symbol`) VALUES ('{}','{}','{}','{}','{}')".format(
         id, nazwa_materialu, jednostka_miary, grupa_materialowa, symbol
@@ -119,7 +119,7 @@ def select_agent(cur):
 
 @create_cursor
 def insert_data_agent(
-    cur, id, nazwa_kontrahenta, adres_kontrahenta, symbol_kontrahenta
+        cur, id, nazwa_kontrahenta, adres_kontrahenta, symbol_kontrahenta
 ):
     s = (
         "INSERT INTO `kartoteka kontrahentow`(`ID`,`Nazwa_kontrahenta`,`Adres_kontrahenta`,`Symbol_kontrahenta`) "
@@ -160,15 +160,15 @@ def get_storage(cur):
 
 @create_cursor
 def insert_data_storage(
-    cur,
-    id,
-    symbol_magazynu,
-    nazwa_magazynu,
-    data_otwarcia,
-    status_inwentaryzacji,
-    data_inwentaryzacji,
-    symbol_placowki,
-    id_dokumentu,
+        cur,
+        id,
+        symbol_magazynu,
+        nazwa_magazynu,
+        data_otwarcia,
+        status_inwentaryzacji,
+        data_inwentaryzacji,
+        symbol_placowki,
+        id_dokumentu,
 ):
     s = (
         "INSERT INTO `slownik magazynow`(`ID`,`Symbol_magazynu`, `Nazwa_magazynu`, `Data_otwarcia`,"
@@ -212,15 +212,15 @@ def get_income_docs(cur):
 @create_cursor
 def delete_doc(cur, index):
     s = (
-        "DELETE FROM `system_magazynowy`.`slownik_dokumentow_magazynowych` WHERE (`Nr_Dok` = '%s')"
-        % index
+            "DELETE FROM `system_magazynowy`.`slownik_dokumentow_magazynowych` WHERE (`Nr_Dok` = '%s')"
+            % index
     )
     cur.execute(s)
 
 
 @create_cursor
 def insert_income_docs(
-    cur, nr_dok, kontrahent, nazwa, data_dok, data_ksiegowania, wartosc, ilosc, cena
+        cur, nr_dok, kontrahent, nazwa, data_dok, data_ksiegowania, wartosc, ilosc, cena
 ):
     s = (
         "INSERT INTO `slownik_dokumentow_magazynowych`(`Nr_Dok`, `Kontrahent`, `Nazwa`, `Data_Dok`, `Data_Ksiegowania`, `Cena`, `Wartosc`,"
@@ -233,10 +233,22 @@ def insert_income_docs(
 
 
 @create_cursor
+def insert_income_docs_into_kartoteka(
+        cur, nr_dok, kontrahent, nazwa, data_dok, data_ksiegowania, wartosc, ilosc, cena
+):
+    insert_sql = (
+        "INSERT INTO `kartoteka magazynu`(`Nazwa`, `Cena`, `Wartosc`, `Ilosc`) "
+        "VALUES ('{}','{}','{}','{}')".format(nazwa, cena, wartosc, ilosc)
+    )
+    cur.execute(insert_sql)
+
+
+@create_cursor
 def select_comp_devision_in_income_doc(cur):
     s = "SELECT `Nazwa_jednostki` FROM system_magazynowy.`slownik jednostki firmy`"
     cur.execute(s)
     return cur
+
 
 @create_cursor
 def select_names(cur):
@@ -255,15 +267,15 @@ def get_expense_docs(cur):
 
 @create_cursor
 def insert_expense_docs(
-    cur,
-    nr_dok,
-    jednostka_firmy,
-    data_dok,
-    data_ksiegowania,
-    wartosc,
-    ilosc,
-    nazwa,
-    cena,
+        cur,
+        nr_dok,
+        jednostka_firmy,
+        data_dok,
+        data_ksiegowania,
+        wartosc,
+        ilosc,
+        nazwa,
+        cena,
 ):
     s = (
         "INSERT INTO `slownik_dokumentow_magazynowych`(`Nr_Dok`,`Jednostka_firmy`,`Nazwa`, `Data_Dok`, `Data_Ksiegowania`,"
@@ -284,12 +296,53 @@ def insert_expense_docs(
 
 
 @create_cursor
+def update_expense_docs_in_kart(
+        cur,
+        nr_dok,
+        jednostka_firmy,
+        data_dok,
+        data_ksiegowania,
+        wartosc,
+        ilosc,
+        nazwa,
+        cena,
+):
+    s = "SELECT * FROM system_magazynowy.`kartoteka magazynu` WHERE (`Nazwa` = '%s')" % nazwa
+    cur.execute(s)
+    print(cur)
+    a = cur._rows[0][:5]
+    wartosc = int(wartosc)
+    ilosc = int(ilosc)
+    wartosc -= int(a[2])
+    ilosc -= int(a[4])
+    if wartosc < 0:
+        return True
+
+    s = (
+        "UPDATE `system_magazynowy`.`kartoteka magazynu` SET `Ilosc` = '{}', `Wartosc` = '{}' WHERE (`Nazwa` = '{}')".format(
+            ilosc,
+            wartosc,
+            nazwa
+        )
+    )
+
+    cur.execute(s)
+
+
+@create_cursor
 def delete_income_doc(cur, index):
     s = (
-        "DELETE FROM `system_magazynowy`.`slownik_dokumentow_magazynowych` WHERE (`Nr_Dok` = '%s')"
-        % index
+            "DELETE FROM `system_magazynowy`.`slownik_dokumentow_magazynowych` WHERE (`Nr_Dok` = '%s')"
+            % index
     )
     cur.execute(s)
+
+
+@create_cursor
+def check_if_name_exist(cur, name):
+    s = "SELECT * FROM system_magazynowy.`kartoteka magazynu` WHERE (`Nazwa` = '%s')" % name
+    cur.execute(s)
+    return cur.rowcount
 
 
 @create_cursor
@@ -328,8 +381,8 @@ def insert_warehouse_records(cur, **kwargs):
 @create_cursor
 def delete_warechouse_records(cur, index):
     s = (
-        "DELETE FROM `system_magazynowy`.`kartoteka magazynu` WHERE (`Index` = '%s')"
-        % index
+            "DELETE FROM `system_magazynowy`.`kartoteka magazynu` WHERE (`Index` = '%s')"
+            % index
     )
     cur.execute(s)
 
@@ -351,8 +404,8 @@ def select_opening_balance(cur):
 @create_cursor
 def delete_data_bilans(cur, index):
     s = (
-        "DELETE FROM `system_magazynowy`.`kartoteka magazynu` WHERE (`Index` = '%s')"
-        % index
+            "DELETE FROM `system_magazynowy`.`kartoteka magazynu` WHERE (`Index` = '%s')"
+            % index
     )
     cur.execute(s)
 
@@ -360,12 +413,23 @@ def delete_data_bilans(cur, index):
 @create_cursor
 def insert_data_bilans(cur, index, lp, nazwa, jednostka_miary, ilosc, cena, wartosc):
     s = (
-        "INSERT INTO `bilans_otwarcia`(`Index`, `Lp`, `Nazwa`, `Jednostka_miary`, `Ilosc`,`Cena`,`Wartosc`) "
-        "VALUES ('{}','{}','{}','{}','{}','{}','{}')".format(
-            index, lp, nazwa, jednostka_miary, ilosc, cena, wartosc
+        "INSERT INTO `bilans_otwarcia`(`Index`, `Nazwa`, `Jednostka_miary`, `Ilosc`,`Cena`,`Wartosc`) "
+        "VALUES ('{}','{}','{}','{}','{}','{}')".format(
+            index, nazwa, jednostka_miary, ilosc, cena, wartosc
         )
     )
     cur.execute(s)
+
+
+@create_cursor
+def insert_bilans_into_kart(
+        cur, index, lp, nazwa, jednostka_miary, ilosc, cena, wartosc
+):
+    insert_sql = (
+        "INSERT INTO `kartoteka magazynu`(`Nazwa`, `Cena`, `Wartosc`, `Ilosc`) "
+        "VALUES ('{}','{}','{}','{}')".format(nazwa, cena, wartosc, ilosc)
+    )
+    cur.execute(insert_sql)
 
 
 @create_cursor
@@ -411,7 +475,7 @@ def insert_group_materials(cur, id, nazwa_grupy, symbol):
 @create_cursor
 def delete_group_materials(cur, index):
     s = (
-        "DELETE FROM `system_magazynowy`.`słownik grup materialowych` WHERE (`ID` = '%s')"
-        % index
+            "DELETE FROM `system_magazynowy`.`słownik grup materialowych` WHERE (`ID` = '%s')"
+            % index
     )
     cur.execute(s)
