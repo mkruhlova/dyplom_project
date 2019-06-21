@@ -3,8 +3,6 @@ from tkinter import ttk
 from tkinter.constants import *
 from tkinter.ttk import Entry
 
-from tkcalendar import DateEntry
-
 from base_frame import BaseFrame
 from conect import (
     delete_doc,
@@ -15,18 +13,13 @@ from conect import (
     get_doc_mag_max_index,
     insert_income_docs_into_kartoteka,
 )
-from config import date_entry_cnf
 from table import Table
-from utils import is_datetime_validate
+from utils import is_datetime_validate, get_current_datetime
 
 
 class IncomeDocs(BaseFrame, Frame):
     def __init__(self, master=None, **kwargs):
         Frame.__init__(self, master, **kwargs)
-
-        self.EntryC = Entry(self, width=20, font='Arial 16')
-        self.EntryB = Entry(self, width=10, font='Arial 16')
-        self.EntryA = Entry(self, width=10, font='Arial 16')
 
         self._columns = [
             "Nr Dok",
@@ -34,9 +27,9 @@ class IncomeDocs(BaseFrame, Frame):
             "Nazwa",
             "Data Dok",
             "Data Ksiegowania",
+            "Ilosc",
             "Cena",
             "Wartosc",
-            "Ilosc",
         ]
 
         self.master = master
@@ -57,7 +50,7 @@ class IncomeDocs(BaseFrame, Frame):
     def init_table(self):
         inf_about_kontrahent = self.get_inf_about_kontrahent()
         comboboxes = {"1": inf_about_kontrahent}
-        disabled = [0]
+        disabled = [0, 7]
 
         self.table = Table(
             self.master,
@@ -91,29 +84,8 @@ class IncomeDocs(BaseFrame, Frame):
         btn = Button(self, text="Zapisz", padx=5, pady=5, command=self.save)
         btn.pack(side="left", padx=5, pady=5)
 
-        Label(self, text='Ilosc').pack()
-        self.EntryA = Entry(self, width=10, font='Arial 16')
-        self.EntryA.pack()
-
-        Label(self, text='Cena').pack()
-        self.EntryB = Entry(self, width=10, font='Arial 16')
-        self.EntryB.pack()
-
-        self.EntryC = Entry(self, width=20, font='Arial 16')
-        self.EntryC.pack()
-
-        but = Button(self, text='Wartosc', command=self.multiply)
-        but.pack()
-
-    def multiply(self):
-        a = self.EntryA.get()
-        a = int(a)
-
-        b = self.EntryB.get()
-        b = int(b)
-
-        result = str(a * b)
-        self.EntryC.insert(0, result)
+        btn = Button(self, text="Zaksięguj", padx=5, pady=5, command=self.ksieguj)
+        btn.pack(side="left", padx=5, pady=5)
 
     @staticmethod
     def get_inf_about_kontrahent():
@@ -132,12 +104,18 @@ class IncomeDocs(BaseFrame, Frame):
         return storage_names
 
     def add_row(self):
-        last_row_index = self.table._number_of_rows
+        last_row_index = self.table.number_of_rows
         index = get_doc_mag_max_index()
         self.table.append_n_rows(1)
         self.table.cell(last_row_index, 0, index + 1)
 
     def save(self):
+        d = self.clean()
+        insert_income_docs(**d)
+        insert_income_docs_into_kartoteka(**d)
+        self.init_table_data()
+
+    def clean(self):
         data = self.table.get_data()
         first_row = data[-1]
         d = dict(
@@ -146,17 +124,15 @@ class IncomeDocs(BaseFrame, Frame):
             nazwa=first_row[2],
             data_dok=first_row[3],
             data_ksiegowania=first_row[4],
-            cena=first_row[5],
-            wartosc=first_row[6],
-            ilosc=first_row[7],
+            ilosc=first_row[5],
+            cena=first_row[6],
         )
-        if not is_datetime_validate(d["data_dok"]) or not is_datetime_validate(
-            d["data_ksiegowania"]
-        ):
+        if not is_datetime_validate(d["data_dok"]):
             messagebox.showwarning("Zle wpisywana data", "Sporobuj ponownie")
             return
-        insert_income_docs(**d)
-        insert_income_docs_into_kartoteka(**d)
+
+        d["wartosc"] = int(d["ilosc"]) * float(d["cena"])
+        return d
 
     def delete_row(self):
         row_id = self.row_id_input.get()
@@ -175,3 +151,8 @@ class IncomeDocs(BaseFrame, Frame):
 
         self.table.delete_row(index)
         delete_doc(row_id)
+
+    def ksieguj(self):
+        datetime = get_current_datetime()
+        last_row_index = self.table.number_of_rows
+        self.table.cell(last_row_index - 1, 4, datetime)

@@ -1,5 +1,6 @@
-from tkinter import Frame, Button, Label, Entry, messagebox, ttk
+from tkinter import Frame, Button, Label, Entry, messagebox
 from tkinter.constants import *
+
 from base_frame import BaseFrame
 from conect import (
     get_bilance_otwarcia,
@@ -8,8 +9,8 @@ from conect import (
     select_opening_balance,
     select_units,
     insert_bilans_into_kart,
+    get_doc_open_balance_max_index,
 )
-
 from table import Table
 
 
@@ -24,7 +25,7 @@ class BalanceOpen(BaseFrame, Frame):
             "Jednostka miary",
             "Ilosc",
             "Cena",
-            "Wartosc"
+            "Wartosc",
         ]
 
         self.master = master
@@ -38,20 +39,15 @@ class BalanceOpen(BaseFrame, Frame):
     def init_table(self):
         units = self.get_units()
         comboboxes_data = {"3": units}
+        disabled = [0, 6]
         self.table = Table(
             self.master,
             self._columns,
             comboboxes=comboboxes_data,
-            column_minwidths=[None, None, None, None, None, None, None],
+            disabled_inp_column=disabled,
         )
         self.table.pack(fill=X, padx=10, pady=10)
-        rows = get_bilance_otwarcia()
-        results = []
-        for row in rows:
-            results.append(row)
-        if results:
-            self.table.set_data(results)
-
+        self.init_table_data()
         self.init_btns()
 
     @staticmethod
@@ -70,6 +66,14 @@ class BalanceOpen(BaseFrame, Frame):
             date_of_bilans.append(row[0])
         return date_of_bilans
 
+    def init_table_data(self):
+        rows = get_bilance_otwarcia()
+        results = []
+        for row in rows:
+            results.append(row)
+        if results:
+            self.table.set_data(results)
+
     def init_btns(self):
         row_id_input_label = Label(self, text="Podaj index: ")
         row_id_input_label.pack(side="left")
@@ -87,9 +91,18 @@ class BalanceOpen(BaseFrame, Frame):
         btn.pack(side="left", padx=5, pady=5)
 
     def add_row(self):
+        last_row_index = self.table.number_of_rows
+        index = get_doc_open_balance_max_index()
         self.table.append_n_rows(1)
+        self.table.cell(last_row_index, 0, index + 1)
 
     def save(self):
+        d = self.clean()
+        insert_data_bilans(**d)
+        insert_bilans_into_kart(**d)
+        self.init_table_data()
+
+    def clean(self):
         data = self.table.get_data()
         first_row = data[-1]
         d = dict(
@@ -97,12 +110,12 @@ class BalanceOpen(BaseFrame, Frame):
             lp=first_row[1],
             nazwa=first_row[2],
             jednostka_miary=first_row[3],
-            cena=first_row[4],
-            wartosc=first_row[5],
-            ilosc=first_row[6],
+            cena=first_row[5],
+            ilosc=first_row[4],
         )
-        insert_data_bilans(**d)
-        insert_bilans_into_kart(**d)
+
+        d["wartosc"] = int(d["ilosc"]) * float(d["cena"])
+        return d
 
     def delete_row(self):
         row_id = self.row_id_input.get()

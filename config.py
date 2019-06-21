@@ -18,3 +18,7 @@ date_entry_cnf = dict(
     borderwidth=2,
     year=2019,
 )
+
+tables_cnf = dict(cell_font="Helvetica 12", header_font="Helvetica 12 italic")
+
+datetime_format = "%Y-%m-%d"

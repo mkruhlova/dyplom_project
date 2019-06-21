@@ -1,10 +1,6 @@
 from tkinter import Frame, Button, Label, messagebox
-from tkinter import ttk
 from tkinter.constants import *
 from tkinter.ttk import Entry
-from typing import List
-
-from tkcalendar import DateEntry
 
 from base_frame import BaseFrame
 from conect import (
@@ -13,14 +9,9 @@ from conect import (
     get_storage_records,
     select_warehouse_records,
     insert_warehouse_records,
-    get_bilance_otwarcia,
     select_materials,
-    get_income_docs,
-    get_expense_docs,
 )
-from config import date_entry_cnf
 from table import Table
-from utils import without_index
 
 
 class WarehouseRec(BaseFrame, Frame):
@@ -33,19 +24,17 @@ class WarehouseRec(BaseFrame, Frame):
         self.table = None
         self.row_id_input = None
 
-        ttk.Label(self, text="Choose date").pack(padx=10, pady=10)
-
-        cal = DateEntry(self, **date_entry_cnf)
-        cal.pack(padx=10, pady=10)
+        # ttk.Label(self, text="Choose date").pack(padx=10, pady=10)
+        #
+        # cal = DateEntry(self, **date_entry_cnf)
+        # cal.pack(padx=10, pady=10)
 
         master.title("Kartoteki magazynowe")
         master.geometry("850x650+300+200")
         self.init_table()
 
     def init_table(self):
-        miara_for_storage = self.get_unit_devision()
-        # comboboxes = {"2": miara_for_storage}
-        self.table = Table(self.master, self._columns)  # , comboboxes=comboboxes)
+        self.table = Table(self.master, self._columns)
         self.table.pack(fill=X, padx=10, pady=10)
         result = self.get_warehouse_records()
         if result:
@@ -70,75 +59,6 @@ class WarehouseRec(BaseFrame, Frame):
         for row in rows:
             result.append(row[:5])
         return result
-        #
-        # for row in bilance_rows:
-        #     qq = list(without_index(row, 1))
-        #     qq = list(without_index(qq, 2))
-        #     result.append(qq)
-        #
-        # r = self.merge_income_expense(income_rows, expense_rows)
-        # for i in range(len(r)):
-        #     r[i] = without_index(r[i], 1)
-        #     r[i] = without_index(r[i], 2)
-        #     r[i] = without_index(r[i], 2)
-        # result.extend(r)
-        # a = []
-        # for r in result:
-        #     index = self.get_index_by_name(a, r[1])
-        #     if index == -1:
-        #         a.append(r)
-        #     else:
-        #         a[index][2] += r[2]
-        #         a[index][3] += r[3]
-        #         a[index][4] += r[4]
-        #
-        # return a
-
-    # def merge_income_expense(self, income_rows, expense_rows):
-    #     merged_incomes = self.merge_rows(
-    #         [list(without_index(row, 2)) for row in income_rows]
-    #     )
-    #     print(merged_incomes)
-    #
-    #     merged_expense = self.merge_rows(
-    #         [list(without_index(row, 1)) for row in expense_rows]
-    #     )
-    #     print(merged_expense)
-    #
-    #     # if len(merged_incomes) < len(merged_expense):
-    #     #     messagebox.showwarning("Please try again", "More expenses than incomes")
-    #     #     return
-    #
-    #     return self.sub_rows(merged_incomes, merged_expense)
-    #
-    # def merge_rows(self, rows):
-    #     result = []
-    #     for r in rows:
-    #         index = self.get_index_by_name(result, r[2])
-    #         if index == -1:
-    #             result.append(r)
-    #         else:
-    #             result[index][5] += r[5]
-    #             result[index][6] += r[6]
-    #             result[index][7] += r[7]
-    #     return result
-    #
-    # def sub_rows(self, merged_incomes, merged_expense):
-    #     for r in merged_incomes:
-    #         index = self.get_index_by_name(merged_expense, r[2])
-    #         if index != -1:
-    #             r[5] -= merged_expense[index][5]
-    #             r[6] -= merged_expense[index][6]
-    #             r[7] -= merged_expense[index][7]
-    #             # if r[5] < 0 or r[6] < 0:
-    #             #     messagebox.showwarning("Please try again", "More expenses than incomes")
-    #     return merged_incomes
-    #
-    # def get_index_by_name(self, result: List, name: str):
-    #     for i, r in enumerate(result):
-    #         if name in r:
-    #             return i
-    #     return -1
 
     @staticmethod
     def get_unit_devision():

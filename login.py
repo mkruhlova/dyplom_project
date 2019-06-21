@@ -26,9 +26,9 @@ class LoginFrame(tk.Frame):
         self.pwd.pack()
         self.pwd.bind("<Return>", self.check)
         btn = tk.Button(self, text="Gotowe", command=self.check)
-        btn.pack()
+        btn.pack(padx=5, pady=5)
         btn = tk.Button(self, text="Odrzuc", command=self.quit)
-        btn.pack()
+        btn.pack(padx=5, pady=5)
 
     def check(self, event=None):
         if (

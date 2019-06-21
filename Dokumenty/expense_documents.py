@@ -1,7 +1,5 @@
-from tkinter import Frame, Button, messagebox, Entry, Label, ttk, Text, IntVar
+from tkinter import Frame, Button, messagebox, Entry, Label, ttk
 from tkinter.constants import *
-
-from tkcalendar import DateEntry
 
 from base_frame import BaseFrame
 from conect import (
@@ -12,15 +10,16 @@ from conect import (
     select_comp_devision_in_income_doc,
     select_names,
     get_doc_mag_max_index,
-    update_expense_docs_in_kart, check_if_name_exist)
-from config import date_entry_cnf
+    update_expense_docs_in_kart,
+    check_if_name_exist,
+)
 from table import Table
+from utils import get_current_datetime
 
 
 class ExpenseDocs(BaseFrame, Frame):
     def __init__(self, master=None, **kwargs):
         Frame.__init__(self, master, **kwargs)
-
 
         self._columns = [
             "Nr Dok",
@@ -28,15 +27,14 @@ class ExpenseDocs(BaseFrame, Frame):
             "Nazwa",
             "Data Dok",
             "Data Ksiegowania",
+            "Ilosc",
             "Cena",
             "Wartosc",
-            "Ilosc",
         ]
 
         self.master = master
         self.table = None
-        self. \
-            row_id_input = None
+        self.row_id_input = None
 
         company_names = self.get_company_names()
         print(company_names)
@@ -52,7 +50,7 @@ class ExpenseDocs(BaseFrame, Frame):
         inf_about_company = self.get_inf_about_company()
         get_names = self.get_inf_names()
         comboboxes = {"1": inf_about_company, "2": get_names}
-        disabled = [0]
+        disabled = [0, 7]
         self.table = Table(
             self.master,
             self._columns,
@@ -60,12 +58,7 @@ class ExpenseDocs(BaseFrame, Frame):
             comboboxes=comboboxes,
         )
         self.table.pack(fill=X, padx=10, pady=10)
-        rows = get_expense_docs()
-        result = []
-        for row in rows:
-            result.append(row[:1] + row[2:])
-        if result:
-            self.table.set_data(result)
+        self.init_table_data()
 
         Label(self, text="Wpisz numer dokumentu: ").pack(side="left")
         self.row_id_input = Entry(self)
@@ -81,7 +74,16 @@ class ExpenseDocs(BaseFrame, Frame):
         btn = Button(self, text="Zapisz", command=self.save)
         btn.pack(side="left", padx=5, pady=5)
 
+        btn = Button(self, text="Zaksięguj", padx=5, pady=5, command=self.ksieguj)
+        btn.pack(side="left", padx=5, pady=5)
 
+    def init_table_data(self):
+        rows = get_expense_docs()
+        result = []
+        for row in rows:
+            result.append(row[:1] + row[2:])
+            if result:
+                self.table.set_data(result)
 
     @staticmethod
     def get_inf_about_company():
@@ -108,12 +110,22 @@ class ExpenseDocs(BaseFrame, Frame):
         return company_names
 
     def add_row(self):
-        last_row_index = self.table._number_of_rows
+        last_row_index = self.table.number_of_rows
         index = get_doc_mag_max_index()
         self.table.append_n_rows(1)
         self.table.cell(last_row_index, 0, index + 1)
 
     def save(self):
+        d = self.clean()
+        if self.is_name_valide(d["nazwa"]):
+            val = update_expense_docs_in_kart(**d)
+            if val:
+                messagebox.showwarning("Zle dane", "1")
+                return
+            insert_expense_docs(**d)
+        self.init_table_data()
+
+    def clean(self):
         data = self.table.get_data()
         first_row = data[-1]
         d = dict(
@@ -122,19 +134,11 @@ class ExpenseDocs(BaseFrame, Frame):
             nazwa=first_row[2],
             data_dok=first_row[3],
             data_ksiegowania=first_row[4],
-            wartosc=first_row[5],
-            ilosc=first_row[6],
-            cena=first_row[7],
+            ilosc=first_row[5],
+            cena=first_row[6],
         )
-        if self.is_name_valide(d['nazwa']):
-            insert_expense_docs(**d)
-            update_expense_docs_in_kart(**d)
-
-    def update_expense_docs_in_kart_save(self):
-        wartosc = self.table.get_data()
-        if int('wartosc') <= 0:
-            messagebox.showwarning("chuj")
-            return
+        d["wartosc"] = int(d["ilosc"]) * float(d["cena"])
+        return d
 
     def is_name_valide(self, name):
         if not check_if_name_exist(name):
@@ -159,3 +163,8 @@ class ExpenseDocs(BaseFrame, Frame):
 
         self.table.delete_row(index)
         delete_income_doc(row_id)
+
+    def ksieguj(self):
+        datetime = get_current_datetime()
+        last_row_index = self.table.number_of_rows
+        self.table.cell(last_row_index - 1, 4, datetime)
