@@ -81,7 +81,7 @@ class IncomeDocs(BaseFrame, Frame):
 
     def add_row(self):
         last_row_index = self.table.number_of_rows
-        index = get_doc_mag_max_index()
+        index = get_doc_mag_max_index() or 0
         self.table.append_n_rows(1)
         self.table.cell(last_row_index, 0, index + 1 + self.new_rows_count)
         self.new_rows_count += 1

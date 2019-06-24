@@ -1,4 +1,5 @@
 import tkinter as tk
+
 from base_frame import BaseFrame
 from conect import fetch_closed_docs
 from table import Table
@@ -6,6 +7,7 @@ from utils import without_index
 
 
 class PeriodClose(BaseFrame, tk.Frame):
+
     def __init__(self, master=None, **kwargs):
         tk.Frame.__init__(self, master, **kwargs)
 
@@ -41,3 +43,11 @@ class PeriodClose(BaseFrame, tk.Frame):
         self.table = Table(self.master, self._columns)
         self.table.pack(fill=tk.X, padx=10, pady=10)
 
+    def save(self):
+        pass
+
+    def add_row(self):
+        pass
+
+    def delete_row(self):
+        pass

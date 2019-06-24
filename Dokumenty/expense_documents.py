@@ -99,9 +99,6 @@ class ExpenseDocs(BaseFrame, Frame):
         if cleaned_data is None:
             return
         for d in cleaned_data:
-            # insert_expence_docs(**d)
-            # insert_expence_docs_into_kartoteka(**d)
-
             if self.is_name_valide(d["nazwa"]):
                 val = update_expense_docs_in_kart(**d)
                 if val:
