@@ -126,7 +126,7 @@ class Table(Frame):
         self,
         master,
         columns,
-        disabled_inp_column: List = None,
+        disabled_columns: List = None,
         comboboxes: Dict = None,
         column_weights=None,
         column_minwidths=None,
@@ -167,7 +167,7 @@ class Table(Frame):
         self._number_of_rows = 0
         self._number_of_columns = len(columns)
         self._comboboxes = comboboxes or {}
-        self._disabled_inputs = disabled_inp_column or []
+        self._disabled_inputs = disabled_columns or []
 
         self._stripped_rows = stripped_rows
 
@@ -239,14 +239,16 @@ class Table(Frame):
                 list_of_vars.append(var)
                 bg = self._stripped_rows[(i + 1) % 2]
                 cnf["background"] = bg
-                if str(j) not in self._comboboxes.keys():
-                    cell = DataEntryCell(
-                        self, disabled=j in self._disabled_inputs, variable=var, **cnf
+                if self._columns[j] in self._comboboxes.keys():
+                    cell = DataComboboxCell(
+                        self, variable=var, values=self._comboboxes[self._columns[j]], **cnf
                     )
                 else:
-                    cell = DataComboboxCell(
-                        self, variable=var, values=self._comboboxes[str(j)], **cnf
+                    disabled = self._columns[j] in self._disabled_inputs
+                    cell = DataEntryCell(
+                        self, variable=var, disabled=disabled, **cnf
                     )
+
                 cell.grid(row=i, column=j, sticky=N + E + W + S)
 
             self._data_vars.append(list_of_vars)
@@ -404,7 +406,6 @@ class Table(Frame):
             self._on_change_data()
 
     def cell(self, row, column, data=None):
-        """Get the value of a table cell"""
         if data is None:
             return self._data_vars[row][column].get()
         else:

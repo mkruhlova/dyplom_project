@@ -1,9 +1,0 @@
-from conect import create_cursor
-
-
-@create_cursor
-def get_kartoteka(cur):
-    s = "SELECT * FROM `slownik jednostki firmy`"
-    cur.execute(s)
-
-    return cur

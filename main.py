@@ -10,7 +10,7 @@ from tkcalendar import DateEntry
 class AppFrame(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
-        self.style = Style()  # TODO
+        self.style = Style()
         self.style.theme_use("vista")
         if config.DEV:
             self.frame = MainFrame(self)

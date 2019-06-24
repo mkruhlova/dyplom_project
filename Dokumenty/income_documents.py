@@ -1,7 +1,5 @@
-from tkinter import Frame, Button, Label, messagebox
-from tkinter import ttk
+from tkinter import Frame, messagebox
 from tkinter.constants import *
-from tkinter.ttk import Entry
 
 from base_frame import BaseFrame
 from conect import (
@@ -31,27 +29,26 @@ class IncomeDocs(BaseFrame, Frame):
             "Cena",
             "Wartosc",
         ]
+        self._disabled_columns = ["Nr Dok", "Wartosc"]
 
         self.master = master
         self.table = None
         self.row_id_input = None
         self.new_rows_count = 0
 
-
         master.title("Dokumenty Przychodowe")
         master.geometry("850x650+300+200")
         self.init_table()
-        self.init_table_btns()
+        self.init_table_btns(True)
 
     def init_table(self):
         inf_about_kontrahent = self.get_inf_about_kontrahent()
-        comboboxes = {"1": inf_about_kontrahent}
-        disabled = [0, 7]
+        comboboxes = {"Kontrahent": inf_about_kontrahent}
 
         self.table = Table(
             self.master,
             self._columns,
-            disabled_inp_column=disabled,
+            disabled_columns=self._disabled_columns,
             comboboxes=comboboxes,
         )
         self.table.pack(fill=X, padx=10, pady=10)
@@ -65,23 +62,6 @@ class IncomeDocs(BaseFrame, Frame):
             result.append(r)
         if result:
             self.table.set_data(result)
-
-    def init_table_btns(self):
-        Label(self, text="Podaj id wierszu: ").pack(side="left")
-        self.row_id_input = Entry(self)
-        self.row_id_input.pack(side="left")
-
-        btn = Button(self, text="Usun wiersz", padx=5, pady=5, command=self.delete_row)
-        btn.pack(side="left", padx=5, pady=5)
-
-        btn = Button(self, text="Dodaj wiersz", padx=5, pady=5, command=self.add_row)
-        btn.pack(side="left", padx=5, pady=5)
-
-        btn = Button(self, text="Zapisz", padx=5, pady=5, command=self.save)
-        btn.pack(side="left", padx=5, pady=5)
-
-        btn = Button(self, text="Zaksięguj", padx=5, pady=5, command=self.ksieguj)
-        btn.pack(side="left", padx=5, pady=5)
 
     @staticmethod
     def get_inf_about_kontrahent():

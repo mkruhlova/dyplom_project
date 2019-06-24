@@ -2,6 +2,39 @@ import tkinter as tk
 
 
 class BaseFrame(tk.Frame):
+    def __init__(self, **kw):
+        self.row_id_input = None
+        super().__init__(**kw)
+
+    def init_table_btns(self, with_accounting: bool = False, deleting_text: str = "Podaj id wierszu: "):
+        tk.Label(self, text=deleting_text).pack(side="left")
+        self.row_id_input = tk.Entry(self)
+        self.row_id_input.pack(side="left")
+
+        btn = tk.Button(self, text="Usun wiersz", padx=5, pady=5, command=self.delete_row)
+        btn.pack(side="left", padx=5, pady=5)
+
+        btn = tk.Button(self, text="Dodaj wiersz", padx=5, pady=5, command=self.add_row)
+        btn.pack(side="left", padx=5, pady=5)
+
+        btn = tk.Button(self, text="Zapisz", padx=5, pady=5, command=self.save)
+        btn.pack(side="left", padx=5, pady=5)
+        if with_accounting:
+            btn = tk.Button(self, text="Zaksięguj", padx=5, pady=5, command=self.ksieguj)
+            btn.pack(side="left", padx=5, pady=5)
+
+    def delete_row(self):
+        raise NotImplementedError
+
+    def add_row(self):
+        raise NotImplementedError
+
+    def save(self):
+        raise NotImplementedError
+
+    def ksieguj(self):
+        pass
+
     def init_ui(self):
         menu_bar = tk.Menu(self.master)
         self.master.config(menu=menu_bar)
@@ -71,54 +104,42 @@ class BaseFrame(tk.Frame):
         self.master.change(AboutProg)
 
     def instr(self):
-
         self.master.change(InstructProg)
 
     def ind_mat(self):
-
         self.master.change(IndexMat)
 
     def kardfile(self):
-
         self.master.change(KardAg)
 
     def compdevision(self):
-
         self.master.change(CompDev)
 
     def unitdevision(self):
-
         self.master.change(UnitDev)
 
     def groupmaterials(self):
-
         self.master.change(GroupMaterials)
 
     def storage(self):
-
         self.master.change(Storage)
 
     def storagedocs(self):
-
         self.master.change(DocsStore)
 
     def warerec(self):
-
         self.master.change(WarehouseRec)
 
     def openbal(self):
         self.master.change(BalanceOpen)
 
     def expense_docs(self):
-
         self.master.change(ExpenseDocs)
 
     def income_docs(self):
-
         self.master.change(IncomeDocs)
 
     def close_period(self):
-
         self.master.change(PeriodClose)
 
     @classmethod

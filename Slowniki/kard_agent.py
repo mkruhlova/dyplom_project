@@ -13,15 +13,17 @@ class KardAg(BaseFrame, Frame):
         Frame.__init__(self, master, **kwargs)
         self.master = master
         self.table = None
+        self._columns = ["ID", "Nazwa Kontrahenta", "Adres kontrahenta", "Symbol Kontahenta"]
 
         master.title("Kartoteka kontrahentow")
         master.geometry("850x650+300+200")
         self.init_table()
+        self.init_table_btns(deleting_text="Podaj ID: ")
 
     def init_table(self):
         self.table = Table(
             self.master,
-            ["ID", "Nazwa Kontrahenta", "Adres kontrahenta", "Symbol Kontahenta"],
+            self._columns,
         )
         self.table.pack(fill=X, padx=10, pady=10)
         rows = get_kartoteka_agent()
@@ -31,30 +33,12 @@ class KardAg(BaseFrame, Frame):
         if result:
             self.table.set_data(result)
 
-        self.row_id_input_label = Label(self, text="Podaj id: ")
-        self.row_id_input_label.pack(side="left")
-
-        self.row_id_input = Entry(self)
-        self.row_id_input.pack(side="left")
-
-        btn = Button(self, text="Usun wiersz", command=self.delete_row)
-        btn.pack(side="left", padx=5, pady=5)
-
-        btn = Button(self, text="Dodaj wiersz", command=self.add_row)
-        btn.pack(side="left", padx=5, pady=5)
-
-        btn = Button(self, text="Zapisz", command=self.save)
-        btn.pack(side="left", padx=5, pady=5)
 
     def add_row(self):
         self.table.append_n_rows(1)
 
     def save(self):
         data = self.table.get_data()
-        s = ""
-        for lst in data:
-            s += " ".join(lst) + " "
-        print(s)
         first_row = data[-1]
         insert_data_agent(
             id=first_row[0],

@@ -1,4 +1,4 @@
-from tkinter import Frame, Button, Label, Entry, messagebox
+from tkinter import Frame, messagebox
 from tkinter.constants import *
 
 from base_frame import BaseFrame
@@ -27,6 +27,7 @@ class BalanceOpen(BaseFrame, Frame):
             "Cena",
             "Wartosc",
         ]
+        self._disabled_columns = ["Index", "Wartosc"]
 
         self.master = master
         self.table = None
@@ -38,17 +39,17 @@ class BalanceOpen(BaseFrame, Frame):
 
     def init_table(self):
         units = self.get_units()
-        comboboxes_data = {"3": units}
-        disabled = [0, 6]
+        comboboxes_data = {"Jednostka miary": units}
+
         self.table = Table(
             self.master,
             self._columns,
             comboboxes=comboboxes_data,
-            disabled_inp_column=disabled,
+            disabled_columns=self._disabled_columns,
         )
         self.table.pack(fill=X, padx=10, pady=10)
         self.init_table_data()
-        self.init_btns()
+        self.init_table_btns(deleting_text="Podaj index: ")
 
     @staticmethod
     def get_units():
@@ -73,22 +74,6 @@ class BalanceOpen(BaseFrame, Frame):
             results.append(row)
         if results:
             self.table.set_data(results)
-
-    def init_btns(self):
-        row_id_input_label = Label(self, text="Podaj index: ")
-        row_id_input_label.pack(side="left")
-
-        self.row_id_input = Entry(self)
-        self.row_id_input.pack(side="left")
-
-        btn = Button(self, text="Usun wiersz", command=self.delete_row)
-        btn.pack(side="left", padx=5, pady=5)
-
-        btn = Button(self, text="Dodaj wiersz", command=self.add_row)
-        btn.pack(side="left", padx=5, pady=5)
-
-        btn = Button(self, text="Zapisz", command=self.save)
-        btn.pack(side="left", padx=5, pady=5)
 
     def add_row(self):
         last_row_index = self.table.number_of_rows

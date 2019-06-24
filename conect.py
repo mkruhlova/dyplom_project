@@ -2,11 +2,17 @@ import pymysql
 
 from config import db_cnf
 
-conn = pymysql.connect(**db_cnf)
+try:
+    conn = pymysql.connect(**db_cnf)
+except Exception as e:
+    print(e)
+    conn = None
 
 
 def create_cursor(func):
     def wrapper(*args, **kwargs):
+        if conn is None:
+            return []
         cur = conn.cursor()
         result = func(cur, *args, **kwargs)
         conn.commit()

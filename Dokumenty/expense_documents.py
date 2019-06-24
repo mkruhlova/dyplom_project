@@ -1,18 +1,16 @@
-from tkinter import Frame, Button, messagebox, Entry, Label, ttk
+from tkinter import Frame, messagebox
 from tkinter.constants import *
 
 from base_frame import BaseFrame
 from conect import (
-    insert_expense_docs,
     get_expense_docs,
     delete_income_doc,
     get_storage_names,
     select_comp_devision_in_income_doc,
     select_names,
     get_doc_mag_max_index,
-    update_expense_docs_in_kart,
     check_if_name_exist,
-    insert_expence_docs_into_kartoteka, insert_expence_docs)
+    insert_expence_docs_into_kartoteka, insert_expence_docs, update_expense_docs_in_kart, insert_expense_docs)
 from table import Table
 from utils import get_current_datetime, is_datetime_validate
 
@@ -31,26 +29,26 @@ class ExpenseDocs(BaseFrame, Frame):
             "Cena",
             "Wartosc",
         ]
+        self._disabled_columns = ["Nr Dok", "Wartosc"]
 
         self.master = master
         self.table = None
-        self.row_id_input = None
         self.new_rows_count = 0
 
         master.title("Dokumenty Rozchodowe")
         master.geometry("850x650+300+200")
         self.init_table()
-        self.init_table_btns()
+        self.init_table_btns(True)
 
     def init_table(self):
         inf_about_company = self.get_inf_about_company()
         get_names = self.get_inf_names()
-        comboboxes = {"1": inf_about_company, "2": get_names}
-        disabled = [0, 7]
+        comboboxes = {"Jednostka Firmy": inf_about_company, "Nazwa": get_names}
+
         self.table = Table(
             self.master,
             self._columns,
-            disabled_inp_column=disabled,
+            disabled_columns=self._disabled_columns,
             comboboxes=comboboxes,
         )
         self.table.pack(fill=X, padx=10, pady=10)
@@ -64,23 +62,6 @@ class ExpenseDocs(BaseFrame, Frame):
             result.append(r)
             if result:
                 self.table.set_data(result)
-
-    def init_table_btns(self):
-        Label(self, text="Podaj id wierszu: ").pack(side="left")
-        self.row_id_input = Entry(self)
-        self.row_id_input.pack(side="left")
-
-        btn = Button(self, text="Usun wiersz", padx=5, pady=5, command=self.delete_row)
-        btn.pack(side="left", padx=5, pady=5)
-
-        btn = Button(self, text="Dodaj wiersz", padx=5, pady=5, command=self.add_row)
-        btn.pack(side="left", padx=5, pady=5)
-
-        btn = Button(self, text="Zapisz", padx=5, pady=5, command=self.save)
-        btn.pack(side="left", padx=5, pady=5)
-
-        btn = Button(self, text="Zaksięguj", padx=5, pady=5, command=self.ksieguj)
-        btn.pack(side="left", padx=5, pady=5)
 
     @staticmethod
     def get_inf_about_company():
@@ -108,7 +89,7 @@ class ExpenseDocs(BaseFrame, Frame):
 
     def add_row(self):
         last_row_index = self.table.number_of_rows
-        index = get_doc_mag_max_index()
+        index = get_doc_mag_max_index() or 0
         self.table.append_n_rows(1)
         self.table.cell(last_row_index, 0, index + 1 + self.new_rows_count)
         self.new_rows_count += 1
@@ -118,14 +99,23 @@ class ExpenseDocs(BaseFrame, Frame):
         if cleaned_data is None:
             return
         for d in cleaned_data:
-            insert_expence_docs(**d)
-            insert_expence_docs_into_kartoteka(**d)
+            # insert_expence_docs(**d)
+            # insert_expence_docs_into_kartoteka(**d)
+
+            if self.is_name_valide(d["nazwa"]):
+                val = update_expense_docs_in_kart(**d)
+                if val:
+                    messagebox.showwarning("Zle dane", "1")
+                    return
+                insert_expense_docs(**d)
         self.init_table_data()
         self.new_rows_count = 0
 
     def clean(self):
+        """Returns None if data is invalid"""
         result = []
         if self.new_rows_count < 1:
+            # Any rows didn't added
             return None
         data = self.table.get_data()
         data = data[-self.new_rows_count:]
@@ -174,4 +164,8 @@ class ExpenseDocs(BaseFrame, Frame):
     def ksieguj(self):
         datetime = get_current_datetime()
         last_row_index = self.table.number_of_rows
-        self.table.cell(last_row_index - 1, 4, datetime)
+        try:
+            self.table.cell(last_row_index - 1, 4, datetime)
+        except IndexError as e:
+            print(e)
+            messagebox.showwarning("Nie ma co ksiegowac", "Sprobuj ponownie")

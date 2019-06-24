@@ -1,5 +1,6 @@
-from tkinter import Frame, Button, Entry, Label, messagebox, ttk
+from tkinter import Frame, messagebox
 from tkinter.constants import *
+
 from base_frame import BaseFrame
 from conect import get_group_materials, insert_group_materials, delete_group_materials
 from table import Table
@@ -10,13 +11,15 @@ class GroupMaterials(BaseFrame, Frame):
         Frame.__init__(self, master, **kwargs)
         self.master = master
         self.table = None
+        self._columns = ["ID", "Nazwa Grupy", "Symbol"]
 
         master.title("Grupy materiaowe")
         master.geometry("850x650+300+200")
         self.init_table()
+        self.init_table_btns(deleting_text="Podaj ID: ")
 
     def init_table(self):
-        self.table = Table(self.master, ["ID", "Nazwa Grupy", "Symbol"])
+        self.table = Table(self.master, self._columns)
         self.table.pack(fill=X, padx=10, pady=10)
         rows = get_group_materials()
         result = []
@@ -25,30 +28,12 @@ class GroupMaterials(BaseFrame, Frame):
         if result:
             self.table.set_data(result)
 
-        self.row_id_input_label = Label(self, text="Put your id: ")
-        self.row_id_input_label.pack(side="left")
-
-        self.row_id_input = Entry(self)
-        self.row_id_input.pack(side="left")
-
-        btn = Button(self, text="Delete row", command=self.delete_row)
-        btn.pack(side="left")
-
-        btn = Button(self, text="Add row", command=self.add_row)
-        btn.pack(side="left")
-
-        btn = Button(self, text="Save", command=self.save)
-        btn.pack(side="left")
-
     def add_row(self):
         self.table.append_n_rows(1)
 
     def save(self):
         data = self.table.get_data()
-        s = ""
-        for lst in data:
-            s += " ".join(lst) + " "
-        print(s)
+
         first_row = data[-1]
         insert_group_materials(
             id=first_row[0], nazwa_grupy=first_row[1], symbol=first_row[2]

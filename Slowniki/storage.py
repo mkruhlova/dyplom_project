@@ -1,11 +1,11 @@
-from tkinter import Frame, Button, Label, Entry, messagebox
+from tkinter import Frame, messagebox
 from tkinter.constants import *
 
 from base_frame import BaseFrame
-from table import Table
+from conect import delete_data_storage
 from conect import insert_data_storage, get_storage
 from conect import select_symbols_for_storage
-from conect import delete_data_storage
+from table import Table
 
 
 class Storage(BaseFrame, Frame):
@@ -27,10 +27,11 @@ class Storage(BaseFrame, Frame):
         master.title("Magazyny")
         master.geometry("850x650+300+200")
         self.init_table()
+        self.init_table_btns(deleting_text="Podaj ID: ")
 
     def init_table(self):
         units = self.get_units()
-        comboboxes = {"4": units}
+        comboboxes = {"Symbol placowki": units}
         self.table = Table(self.master, self._columns, comboboxes=comboboxes)
         self.table.pack(fill=X, padx=10, pady=10)
         rows = get_storage()
@@ -40,8 +41,6 @@ class Storage(BaseFrame, Frame):
         if results:
             self.table.set_data(results)
 
-        self.init_btns()
-
     @staticmethod
     def get_units():
         available_units = []
@@ -50,31 +49,12 @@ class Storage(BaseFrame, Frame):
             available_units.append(row[0])
         return available_units
 
-    def init_btns(self):
-        row_id_input_label = Label(self, text="Put your id: ")
-        row_id_input_label.pack(side="left")
-
-        self.row_id_input = Entry(self)
-        self.row_id_input.pack(side="left")
-
-        btn = Button(self, text="Usun wiersz", command=self.delete_row)
-        btn.pack(side="left", padx=5, pady=5)
-
-        btn = Button(self, text="Dodaj wiersz", command=self.add_row)
-        btn.pack(side="left", padx=5, pady=5)
-
-        btn = Button(self, text="Zapisz", command=self.save)
-        btn.pack(side="left", padx=5, pady=5)
-
     def add_row(self):
         self.table.append_n_rows(1)
 
     def save(self):
         data = self.table.get_data()
-        s = ""
-        for lst in data:
-            s += " ".join(lst) + " "
-        print(s)
+
         first_row = data[-1]
         insert_data_storage(
             id=first_row[0],

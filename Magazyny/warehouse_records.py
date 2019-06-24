@@ -1,6 +1,5 @@
-from tkinter import Frame, Button, Label, messagebox
+from tkinter import Frame, messagebox
 from tkinter.constants import *
-from tkinter.ttk import Entry
 
 from base_frame import BaseFrame
 from conect import (
@@ -24,10 +23,10 @@ class WarehouseRec(BaseFrame, Frame):
         self.table = None
         self.row_id_input = None
 
-
         master.title("Kartoteki magazynowe")
         master.geometry("850x650+300+200")
         self.init_table()
+        self.init_table_btns(deleting_text="Podaj ID: ")
 
     def init_table(self):
         self.table = Table(self.master, self._columns)
@@ -35,19 +34,6 @@ class WarehouseRec(BaseFrame, Frame):
         result = self.get_warehouse_records()
         if result:
             self.table.set_data(result)
-
-        Label(self, text="Podaj ID: ").pack(side="left")
-        self.row_id_input = Entry(self)
-        self.row_id_input.pack(side="left")
-
-        btn = Button(self, text="Usun wiersz", command=self.delete_row)
-        btn.pack(side="left", padx=5, pady=5)
-
-        btn = Button(self, text="Dodaj wiersz", command=self.add_row)
-        btn.pack(side="left", padx=5, pady=5)
-
-        btn = Button(self, text="Zapisz", command=self.save)
-        btn.pack(side="left", padx=5, pady=5)
 
     def get_warehouse_records(self):
         result = []

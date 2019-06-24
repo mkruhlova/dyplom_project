@@ -26,11 +26,12 @@ class IndexMat(BaseFrame, Frame):
         master.title("Indeksy Materialowe")
         master.geometry("850x650+300+200")
         self.init_table()
+        self.init_table_btns(deleting_text="Podaj ID: ")
 
     def init_table(self):
         units = self.get_units()
         materials = self.get_group_materials()
-        comboboxes = {"2": units, "3": materials}
+        comboboxes = {"Jednostka miary": units, "Grupa materialowa": materials}
         self.table = Table(self.master, self._columns, comboboxes=comboboxes)
         self.table.pack(fill=X, padx=10, pady=10)
         rows = get_kartoteka_index()
@@ -40,7 +41,6 @@ class IndexMat(BaseFrame, Frame):
         if results:
             self.table.set_data(results)
 
-        self.init_btns()
 
     @staticmethod
     def get_units():
@@ -58,21 +58,6 @@ class IndexMat(BaseFrame, Frame):
             available_materials.append(row[0])
         return available_materials
 
-    def init_btns(self):
-        row_id_input_label = Label(self, text="Podaj ID: ")
-        row_id_input_label.pack(side="left")
-
-        self.row_id_input = Entry(self)
-        self.row_id_input.pack(side="left")
-
-        btn = Button(self, text="Usun wiersz", command=self.delete_row)
-        btn.pack(side="left", padx=5, pady=5)
-
-        btn = Button(self, text="Dodaj wiersz", command=self.add_row)
-        btn.pack(side="left", padx=5, pady=5)
-
-        btn = Button(self, text="Zapisz", command=self.save)
-        btn.pack(side="left", padx=5, pady=5)
 
     def add_row(self):
         self.table.append_n_rows(1)

@@ -1,10 +1,11 @@
-from tkinter import Frame, Button, messagebox, Label, Entry, ttk
+from tkinter import Frame, messagebox
 from tkinter.constants import *
+
 from base_frame import BaseFrame
-from table import Table
-from conect import insert_data_unit
-from conect import get_kartoteka_unit
 from conect import delete_data
+from conect import get_kartoteka_unit
+from conect import insert_data_unit
+from table import Table
 
 
 class UnitDev(BaseFrame, Frame):
@@ -12,13 +13,15 @@ class UnitDev(BaseFrame, Frame):
         Frame.__init__(self, master, **kwargs)
         self.master = master
         self.table = None
+        self._columns = ["ID", "Nazwa jednostki", "Symbol jednostki"]
 
         master.title("Jednostki miary")
         master.geometry("850x650+300+200")
         self.init_table()
+        self.init_table_btns(deleting_text="Podaj ID: ")
 
     def init_table(self):
-        self.table = Table(self.master, ["ID", "Nazwa jednostki", "Symbol jednostki"])
+        self.table = Table(self.master, self._columns)
         self.table.pack(fill=X, padx=10, pady=10)
         rows = get_kartoteka_unit()
         result = []
@@ -26,21 +29,6 @@ class UnitDev(BaseFrame, Frame):
             result.append(row)
         if result:
             self.table.set_data(result)
-
-        self.row_id_input_label = Label(self, text="Put your id: ")
-        self.row_id_input_label.pack(side="left")
-
-        self.row_id_input = Entry(self)
-        self.row_id_input.pack(side="left")
-
-        btn = Button(self, text="Delete row", command=self.delete_row)
-        btn.pack(side="left")
-
-        btn = Button(self, text="Add row", command=self.add_row)
-        btn.pack(side="left")
-
-        btn = Button(self, text="Save", command=self.save)
-        btn.pack(side="left")
 
     def add_row(self):
         self.table.append_n_rows(1)
