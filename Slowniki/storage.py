@@ -17,8 +17,6 @@ class Storage(BaseFrame, Frame):
             "Symbol magazynu",
             "Nazwa magazynu",
             "Data otwarcia",
-            "Status inwentaryzacji",
-            "Data inwentaryzacji",
             "Symbol placowki",
             "ID Dokumentu",
         ]
@@ -32,7 +30,7 @@ class Storage(BaseFrame, Frame):
 
     def init_table(self):
         units = self.get_units()
-        comboboxes = {"6": units}
+        comboboxes = {"4": units}
         self.table = Table(self.master, self._columns, comboboxes=comboboxes)
         self.table.pack(fill=X, padx=10, pady=10)
         rows = get_storage()
@@ -83,10 +81,8 @@ class Storage(BaseFrame, Frame):
             symbol_magazynu=first_row[1],
             nazwa_magazynu=first_row[2],
             data_otwarcia=first_row[3],
-            status_inwentaryzacji=first_row[4],
-            data_inwentaryzacji=first_row[5],
-            symbol_placowki=first_row[6],
-            id_dokumentu=first_row[7],
+            symbol_placowki=first_row[4],
+            id_dokumentu=first_row[5],
         )
 
     def delete_row(self):

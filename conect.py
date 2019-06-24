@@ -98,7 +98,7 @@ def select_units(cur):
 
 @create_cursor
 def select_materials(cur):
-    s = "SELECT `Nazwa_grupy` FROM system_magazynowy.`słownik grup materialowych`"
+    s = "SELECT `Nazwa_grupy` FROM system_magazynowy.`slownik grup materialowych`"
     cur.execute(s)
     return cur
 
@@ -165,22 +165,17 @@ def insert_data_storage(
     symbol_magazynu,
     nazwa_magazynu,
     data_otwarcia,
-    status_inwentaryzacji,
-    data_inwentaryzacji,
     symbol_placowki,
     id_dokumentu,
 ):
     s = (
         "INSERT INTO `slownik magazynow`(`ID`,`Symbol_magazynu`, `Nazwa_magazynu`, `Data_otwarcia`,"
-        "`Status_inwentarizacji`, `Data_inwentarizacji`,"
         "`Symbol_placowki`,`ID_Dokumentu`)"
         "VALUES ('{}','{}','{}','{}','{}','{}','{}','{}')".format(
             id,
             symbol_magazynu,
             nazwa_magazynu,
             data_otwarcia,
-            status_inwentaryzacji,
-            data_inwentaryzacji,
             symbol_placowki,
             id_dokumentu,
         )
@@ -250,8 +245,50 @@ def insert_income_docs(
 
 
 @create_cursor
+def insert_expence_docs(
+    cur, nr_dok, jednostka_firmy, nazwa, data_dok, data_ksiegowania, wartosc, ilosc, cena
+):
+    if data_ksiegowania:
+        s = (
+            "INSERT INTO `slownik_dokumentow_magazynowych`(`Nr_Dok`, `Jednostka_firmy`, `Nazwa`, `Data_Dok`, `Data_Ksiegowania`, `Cena`, `Wartosc`,"
+            "`Ilosc`) "
+            "VALUES ('{}','{}','{}','{}','{}','{}','{}','{}')".format(
+                nr_dok,
+                jednostka_firmy,
+                nazwa,
+                data_dok,
+                data_ksiegowania,
+                cena,
+                wartosc,
+                ilosc,
+            )
+        )
+    else:
+        s = (
+            "INSERT INTO `slownik_dokumentow_magazynowych`(`Nr_Dok`, `Jednostka_firmy`, `Nazwa`, `Data_Dok`, `Cena`, `Wartosc`,"
+            "`Ilosc`) "
+            "VALUES ('{}','{}','{}','{}','{}','{}','{}')".format(
+                nr_dok, jednostka_firmy, nazwa, data_dok, cena, wartosc, ilosc
+            )
+        )
+
+    cur.execute(s)
+
+
+
+@create_cursor
 def insert_income_docs_into_kartoteka(
     cur, nr_dok, kontrahent, nazwa, data_dok, data_ksiegowania, wartosc, ilosc, cena
+):
+    insert_sql = (
+        "INSERT INTO `kartoteka magazynu`(`Nazwa`, `Cena`, `Wartosc`, `Ilosc`) "
+        "VALUES ('{}','{}','{}','{}')".format(nazwa, cena, wartosc, ilosc)
+    )
+    cur.execute(insert_sql)
+
+@create_cursor
+def insert_expence_docs_into_kartoteka(
+    cur, nr_dok, jednostka_firmy, nazwa, data_dok, data_ksiegowania, wartosc, ilosc, cena
 ):
     insert_sql = (
         "INSERT INTO `kartoteka magazynu`(`Nazwa`, `Cena`, `Wartosc`, `Ilosc`) "
@@ -449,7 +486,7 @@ def get_bilance_otwarcia(cur):
 
 @create_cursor
 def get_group_material(cur):
-    s = "SELECT * FROM `słownik grup materialowych`"
+    s = "SELECT * FROM `slownik grup materialowych`"
     cur.execute(s)
 
     return cur

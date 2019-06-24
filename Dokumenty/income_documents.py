@@ -35,12 +35,8 @@ class IncomeDocs(BaseFrame, Frame):
         self.master = master
         self.table = None
         self.row_id_input = None
+        self.new_rows_count = 0
 
-        storage_names = self.get_storage_names()
-        print(storage_names)
-        Label(self, text="Magazyny").pack()
-        self.combo1 = ttk.Combobox(self, values=storage_names)
-        self.combo1.pack()
 
         master.title("Dokumenty Przychodowe")
         master.geometry("850x650+300+200")
@@ -71,7 +67,7 @@ class IncomeDocs(BaseFrame, Frame):
             self.table.set_data(result)
 
     def init_table_btns(self):
-        Label(self, text="Put your id: ").pack(side="left")
+        Label(self, text="Podaj id wierszu: ").pack(side="left")
         self.row_id_input = Entry(self)
         self.row_id_input.pack(side="left")
 
@@ -107,32 +103,42 @@ class IncomeDocs(BaseFrame, Frame):
         last_row_index = self.table.number_of_rows
         index = get_doc_mag_max_index()
         self.table.append_n_rows(1)
-        self.table.cell(last_row_index, 0, index + 1)
+        self.table.cell(last_row_index, 0, index + 1 + self.new_rows_count)
+        self.new_rows_count += 1
 
     def save(self):
-        d = self.clean()
-        insert_income_docs(**d)
-        insert_income_docs_into_kartoteka(**d)
+        cleaned_data = self.clean()
+        if cleaned_data is None:
+            return
+        for d in cleaned_data:
+            insert_income_docs(**d)
+            insert_income_docs_into_kartoteka(**d)
         self.init_table_data()
+        self.new_rows_count = 0
 
     def clean(self):
+        result = []
+        if self.new_rows_count < 1:
+            return None
         data = self.table.get_data()
-        first_row = data[-1]
-        d = dict(
-            nr_dok=first_row[0],
-            kontrahent=first_row[1],
-            nazwa=first_row[2],
-            data_dok=first_row[3],
-            data_ksiegowania=first_row[4],
-            ilosc=first_row[5],
-            cena=first_row[6],
-        )
-        if not is_datetime_validate(d["data_dok"]):
-            messagebox.showwarning("Zle wpisywana data", "Sporobuj ponownie")
-            return
+        data = data[-self.new_rows_count:]
+        for first_row in data:
+            d = dict(
+                nr_dok=first_row[0],
+                kontrahent=first_row[1],
+                nazwa=first_row[2],
+                data_dok=first_row[3],
+                data_ksiegowania=first_row[4],
+                ilosc=first_row[5],
+                cena=first_row[6],
+            )
+            if not is_datetime_validate(d["data_dok"]):
+                messagebox.showwarning("Zle wpisywana data", "Sporobuj ponownie")
+                return
 
-        d["wartosc"] = int(d["ilosc"]) * float(d["cena"])
-        return d
+            d["wartosc"] = int(d["ilosc"]) * float(d["cena"])
+            result.append(d)
+        return result
 
     def delete_row(self):
         row_id = self.row_id_input.get()

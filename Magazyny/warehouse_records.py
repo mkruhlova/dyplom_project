@@ -24,10 +24,6 @@ class WarehouseRec(BaseFrame, Frame):
         self.table = None
         self.row_id_input = None
 
-        # ttk.Label(self, text="Choose date").pack(padx=10, pady=10)
-        #
-        # cal = DateEntry(self, **date_entry_cnf)
-        # cal.pack(padx=10, pady=10)
 
         master.title("Kartoteki magazynowe")
         master.geometry("850x650+300+200")
